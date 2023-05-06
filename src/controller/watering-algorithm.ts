@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { WaterEventType, type WaterEvent } from "@prisma/client"
-import dayjs from "dayjs"
-import mathjs from "mathjs"
+import { WaterEventType, type WaterEvent } from "@prisma/client";
+import dayjs from "dayjs";
+import {median} from "mathjs";
+
+
+
+
 
 const TOO_WET_DAYS_TO_ADD_SCALER = 1 / 3
 const TOO_DRY_DAYS_BETWEEN_SCALER = 2 / 3
@@ -52,18 +56,18 @@ function isWateringEvent(event: _WaterEvent): boolean {
 }
 
 export function getDateOfNextWatering(events: _WaterEvent[]): Date {
-  if (events.length === 0) {
-    return new Date()
-  }
   const sortedEvents = events.sort(
     (a, b) => a.date.getTime() - b.date.getTime()
   )
 
-  const medianDaysBetweenWatering = mathjs.median(
+  const medianDaysBetweenWatering = median(
     getAdjustedDaysBetweenWatering(sortedEvents)
   ) as number
 
   const wateringEvents = sortedEvents.filter(isWateringEvent)
+  if (wateringEvents.length < 2) {
+    throw new Error("Not enough watering events")
+  }
   const lastWateringDate = wateringEvents[wateringEvents.length - 1]!.date
 
   const lastEvent = sortedEvents[sortedEvents.length - 1]!
@@ -71,14 +75,20 @@ export function getDateOfNextWatering(events: _WaterEvent[]): Date {
     medianDaysBetweenWatering,
     "day"
   )
+  let potentialNextWateringDate: dayjs.Dayjs | null = null
   if (lastEvent.type === WaterEventType.SKIPPED_TOO_WET) {
-    const potentialNextWateringDate = dayjs(lastEvent.date).add(
+    potentialNextWateringDate = dayjs(lastEvent.date).add(
       medianDaysBetweenWatering * TOO_WET_DAYS_TO_ADD_SCALER,
       "day"
     )
-    if (potentialNextWateringDate.isAfter(nextWateringDate)) {
-      nextWateringDate = potentialNextWateringDate
-    }
+  } else if (lastEvent.type === WaterEventType.SKIPPED_SNOOZED) {
+    potentialNextWateringDate = dayjs(lastEvent.date).add(1, "day")
+  }
+  if (
+    potentialNextWateringDate !== null &&
+    potentialNextWateringDate.isAfter(nextWateringDate)
+  ) {
+    nextWateringDate = potentialNextWateringDate
   }
 
   return nextWateringDate.toDate()

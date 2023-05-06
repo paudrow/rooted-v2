@@ -6,6 +6,7 @@ import {
   daysUntilWatering,
   getAdjustedDaysBetweenWatering,
   getDaysBetweenDates,
+  getDateOfNextWatering,
   type _WaterEvent,
 } from "./watering-algorithm"
 
@@ -84,5 +85,55 @@ describe("getAdjustedDaysBetweenWatering", () => {
       }
       lastSum = actualSum
     }
+  })
+})
+
+describe("getDateOfNextWatering", () => {
+  it("works for a simple case - median should be 1", () => {
+    const date = getDateOfNextWatering([
+      {
+        date: new Date(Date.parse("2021-01-01")),
+        type: WaterEventType.WATERED,
+      },
+      {
+        date: new Date(Date.parse("2021-01-02")),
+        type: WaterEventType.WATERED,
+      },
+      {
+        date: new Date(Date.parse("2021-01-03")),
+        type: WaterEventType.WATERED,
+      },
+      {
+        date: new Date(Date.parse("2021-01-06")),
+        type: WaterEventType.WATERED_TOO_DRY,
+      }
+    ])
+    expect(date).toEqual(new Date(Date.parse("2021-01-07")))
+  })
+
+  it("works for a simple case - median should be 2", () => {
+    const date = getDateOfNextWatering([
+      {
+        date: new Date(Date.parse("2021-01-01")),
+        type: WaterEventType.WATERED,
+      },
+      {
+        date: new Date(Date.parse("2021-01-02")),
+        type: WaterEventType.WATERED,
+      },
+      {
+        date: new Date(Date.parse("2021-01-03")),
+        type: WaterEventType.WATERED,
+      },
+      {
+        date: new Date(Date.parse("2021-01-06")),
+        type: WaterEventType.WATERED_TOO_DRY,
+      },
+      {
+        date: new Date(Date.parse("2021-01-07")),
+        type: WaterEventType.WATERED_TOO_DRY,
+      }
+    ])
+    expect(date).toEqual(new Date(Date.parse("2021-01-08")))
   })
 })
