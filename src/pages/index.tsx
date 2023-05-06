@@ -1,15 +1,21 @@
-import { type NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
+import { type NextPage } from "next"
+import Head from "next/head"
+import Link from "next/link"
+import { api } from "@/utils/api"
+import {
+  SignInButton,
+  SignOutButton,
+  SignUpButton,
+  useUser,
+} from "@clerk/nextjs"
 
-import { api } from "@/utils/api";
-import { SignInButton, SignOutButton, SignUpButton, useUser } from "@clerk/nextjs";
-import { PageLayout } from "@/components/layout";
+import { Calendar } from "@/components/ui/calendar"
+import { PageLayout } from "@/components/layout"
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const hello = api.example.hello.useQuery({ text: "from tRPC" })
 
-  const {user, isSignedIn, isLoaded} = useUser();
+  const { user, isSignedIn, isLoaded } = useUser()
 
   return (
     <>
@@ -19,7 +25,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <div className="h-screen flex justify-center center-items">
+        <div className="center-items flex h-screen justify-center">
           {!isSignedIn && <SignInButton />}
           {!!isSignedIn && (
             <div className="flex flex-col items-center justify-center">
@@ -28,9 +34,12 @@ const Home: NextPage = () => {
             </div>
           )}
         </div>
+        <div className="flex items-center justify-center">
+          <Calendar />
+        </div>
       </PageLayout>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
