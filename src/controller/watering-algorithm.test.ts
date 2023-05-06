@@ -5,8 +5,8 @@ import { WaterEventType } from "@prisma/client"
 import {
   daysUntilWatering,
   getAdjustedDaysBetweenWatering,
-  getDaysBetweenDates,
   getDateOfNextWatering,
+  getDaysBetweenDates,
   type _WaterEvent,
 } from "./watering-algorithm"
 
@@ -106,7 +106,7 @@ describe("getDateOfNextWatering", () => {
       {
         date: new Date(Date.parse("2021-01-06")),
         type: WaterEventType.WATERED_TOO_DRY,
-      }
+      },
     ])
     expect(date).toEqual(new Date(Date.parse("2021-01-07")))
   })
@@ -132,7 +132,7 @@ describe("getDateOfNextWatering", () => {
       {
         date: new Date(Date.parse("2021-01-07")),
         type: WaterEventType.WATERED_TOO_DRY,
-      }
+      },
     ])
     expect(date).toEqual(new Date(Date.parse("2021-01-08")))
   })

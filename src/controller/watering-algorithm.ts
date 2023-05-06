@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { WaterEventType, type WaterEvent } from "@prisma/client";
-import dayjs from "dayjs";
-import {median} from "mathjs";
-
-
-
-
+import { WaterEventType, type WaterEvent } from "@prisma/client"
+import dayjs from "dayjs"
+import { median } from "mathjs"
 
 const TOO_WET_DAYS_TO_ADD_SCALER = 1 / 3
 const TOO_DRY_DAYS_BETWEEN_SCALER = 2 / 3
