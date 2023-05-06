@@ -1,21 +1,15 @@
 import { type NextPage } from "next"
 import Head from "next/head"
-import Link from "next/link"
-import { api } from "@/utils/api"
-import {
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-  useUser,
-} from "@clerk/nextjs"
+// import { api } from "@/utils/api"
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs"
 
 import { Calendar } from "@/components/ui/calendar"
 import { PageLayout } from "@/components/layout"
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" })
+  // const hello = api.example.hello.useQuery({ text: "from tRPC" })
 
-  const { user, isSignedIn, isLoaded } = useUser()
+  const { user, isSignedIn } = useUser()
 
   return (
     <>

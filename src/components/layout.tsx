@@ -1,6 +1,5 @@
 import type { PropsWithChildren } from "react"
 
-import { TailwindIndicator } from "./tailwind-indicator"
 import { ThemeToggle } from "./theme-toggle"
 
 export const PageLayout = (props: PropsWithChildren) => {
