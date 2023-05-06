@@ -1,4 +1,13 @@
-import { daysUntilWatering, getDaysBetweenDates } from "./watering-algorithm"
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
+import { WaterEventType } from "@prisma/client"
+
+import {
+  daysUntilWatering,
+  getAdjustedDaysBetweenWatering,
+  getDaysBetweenDates,
+  type _WaterEvent,
+} from "./watering-algorithm"
 
 describe("daysUntilWatering", () => {
   it("returns 7", () => {
@@ -37,5 +46,43 @@ describe("getDaysBetweenDates", () => {
       (dateString) => new Date(Date.parse(dateString))
     )
     expect(getDaysBetweenDates(...dates)).toEqual(expected)
+  })
+})
+
+describe("getAdjustedDaysBetweenWatering", () => {
+  it.each([
+    {
+      dateStrings: [],
+    },
+    {
+      dateStrings: ["2021-01-01"],
+    },
+    {
+      dateStrings: ["2021-01-01", "2021-01-02"],
+    },
+    {
+      dateStrings: ["2021-01-01", "2021-01-02", "2021-01-03"],
+    },
+    {
+      dateStrings: ["2021-01-01", "2021-01-02", "2021-01-03", "2021-01-06"],
+    },
+  ])("%#. %j", ({ dateStrings }) => {
+    let lastSum: number | undefined = undefined
+    for (let i = 0; i < dateStrings.length; i++) {
+      const waterEvents: _WaterEvent[] = []
+      for (let j = 0; j < dateStrings.length; j++) {
+        const date = new Date(Date.parse(dateStrings[j]!))
+        const type =
+          j > i ? WaterEventType.WATERED : WaterEventType.WATERED_TOO_DRY
+        waterEvents.push({ date, type })
+      }
+      const adjustedDaysBetweenWatering =
+        getAdjustedDaysBetweenWatering(waterEvents)
+      const actualSum = adjustedDaysBetweenWatering.reduce((a, b) => a + b, 0)
+      if (lastSum !== undefined) {
+        expect(actualSum).toBeLessThanOrEqual(lastSum)
+      }
+      lastSum = actualSum
+    }
   })
 })
