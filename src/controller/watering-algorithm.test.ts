@@ -1,4 +1,4 @@
-import { WaterEventType, type WaterEvent } from "@prisma/client"
+import { WaterEventType } from "@prisma/client"
 import dayjs from "dayjs"
 
 import {
