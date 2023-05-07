@@ -137,8 +137,8 @@ if (require.main === module) {
       type: WaterEventType.WATERED,
     },
     {
-      date: new Date("2021-01-09"),
-      type: WaterEventType.SKIPPED_SNOOZED,
+      date: new Date("2021-01-10"),
+      type: WaterEventType.SKIPPED_TOO_WET,
     },
   ])
   console.log(out)

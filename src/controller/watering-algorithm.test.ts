@@ -298,6 +298,28 @@ describe("_getDaysFromLastEventToNextWatering", () => {
           },
         ])
       ).toBeCloseTo(i * TOO_DRY_DAYS_BETWEEN_SCALER)
+
+      // 2 intermediate too dry events + an end too dry event resulting in the dry constant being applied twice
+      expect(
+        _getDaysFromLastEventToNextWatering([
+          {
+            date: dayjsDate.toDate(),
+            type: WaterEventType.WATERED,
+          },
+          {
+            date: dayjsDate.add(i, "day").toDate(),
+            type: WaterEventType.WATERED_TOO_DRY,
+          },
+          {
+            date: dayjsDate.add(i * 2, "day").toDate(),
+            type: WaterEventType.WATERED_TOO_DRY,
+          },
+          {
+            date: dayjsDate.add(i * 3, "day").toDate(),
+            type: WaterEventType.WATERED_TOO_DRY,
+          },
+        ])
+      ).toBeCloseTo(i * (TOO_DRY_DAYS_BETWEEN_SCALER ** 2))
     }
   })
 
