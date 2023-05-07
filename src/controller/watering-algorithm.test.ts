@@ -1,10 +1,12 @@
-import { WaterEventType, type WaterEvent } from "@prisma/client";
-import dayjs from "dayjs";
+import { WaterEventType, type WaterEvent } from "@prisma/client"
+import dayjs from "dayjs"
 
-
-
-import { TOO_DRY_DAYS_BETWEEN_SCALER, TOO_WET_DAYS_TO_ADD_SCALER, _getDaysFromLastEventToNextWatering, getDateOfNextWateringEvent } from './watering-algorithm';
-
+import {
+  TOO_DRY_DAYS_BETWEEN_SCALER,
+  TOO_WET_DAYS_TO_ADD_SCALER,
+  _getDaysFromLastEventToNextWatering,
+  getDateOfNextWateringEvent,
+} from "./watering-algorithm"
 
 describe("getDateOfNextWateringEvent", () => {
   it("returns today with no events", () => {
@@ -22,12 +24,12 @@ describe("getDateOfNextWateringEvent", () => {
           type: WaterEventType.WATERED,
         },
       ])
-    ).toEqual(dayjsDate.add(1, 'day').toDate())
+    ).toEqual(dayjsDate.add(1, "day").toDate())
   })
 
   it("returns the median time between with two watering events", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         getDateOfNextWateringEvent([
           {
@@ -35,17 +37,17 @@ describe("getDateOfNextWateringEvent", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
-      ).toEqual(dayjsDate.add(2*i, 'day').toDate())
+      ).toEqual(dayjsDate.add(2 * i, "day").toDate())
     }
   })
 
   it("returns the median time between with three watering events", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         getDateOfNextWateringEvent([
           {
@@ -53,21 +55,21 @@ describe("getDateOfNextWateringEvent", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(2*i, 'day').toDate(),
+            date: dayjsDate.add(2 * i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
-      ).toEqual(dayjsDate.add(3*i, 'day').toDate())
+      ).toEqual(dayjsDate.add(3 * i, "day").toDate())
     }
   })
 
   it("adds one day with a last snoozed event", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         getDateOfNextWateringEvent([
           {
@@ -75,15 +77,15 @@ describe("getDateOfNextWateringEvent", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(2*i, 'day').toDate(),
+            date: dayjsDate.add(2 * i, "day").toDate(),
             type: WaterEventType.SKIPPED_SNOOZED,
           },
         ])
-      ).toEqual(dayjsDate.add(2*i + 1, 'day').toDate())
+      ).toEqual(dayjsDate.add(2 * i + 1, "day").toDate())
     }
   })
 })
@@ -94,7 +96,10 @@ describe("_getDaysFromLastEventToNextWatering", () => {
   })
 
   it("returns 1 with no watering events", () => {
-    for (const type of [WaterEventType.SKIPPED_SNOOZED, WaterEventType.SKIPPED_TOO_WET]) {
+    for (const type of [
+      WaterEventType.SKIPPED_SNOOZED,
+      WaterEventType.SKIPPED_TOO_WET,
+    ]) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -119,7 +124,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("returns the time between with two watering events", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -127,7 +132,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
@@ -137,7 +142,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("returns the median time between with three watering events", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -145,11 +150,11 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
@@ -159,7 +164,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("returns the median time between with four watering events", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 2; i < 10; i=i+2) {
+    for (let i = 2; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -167,15 +172,15 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i-1, 'day').toDate(), // make 1 less than `i`
+            date: dayjsDate.add(i - 1, "day").toDate(), // make 1 less than `i`
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2-1, 'day').toDate(), // keep offset
+            date: dayjsDate.add(i * 2 - 1, "day").toDate(), // keep offset
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(), // remove offset so median is `i`
+            date: dayjsDate.add(i * 3, "day").toDate(), // remove offset so median is `i`
             type: WaterEventType.WATERED,
           },
         ])
@@ -185,7 +190,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("ignores skip events that are not the last event", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 2; i < 10; i=i+2) {
+    for (let i = 2; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -193,27 +198,27 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.SKIPPED_SNOOZED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.SKIPPED_SNOOZED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*3-1, 'day').toDate(),
+            date: dayjsDate.add(i * 3 - 1, "day").toDate(),
             type: WaterEventType.SKIPPED_TOO_WET,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(),
+            date: dayjsDate.add(i * 3, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
@@ -223,7 +228,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("decreases the time with the last event being too dry", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -231,15 +236,15 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(),
+            date: dayjsDate.add(i * 3, "day").toDate(),
             type: WaterEventType.WATERED_TOO_DRY,
           },
         ])
@@ -249,7 +254,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("uses intermediate too dry events in the median", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       // 1 too dry event, which isn't selected as the median
       expect(
         _getDaysFromLastEventToNextWatering([
@@ -258,15 +263,15 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED_TOO_DRY,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(),
+            date: dayjsDate.add(i * 3, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
@@ -280,15 +285,15 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED_TOO_DRY,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED_TOO_DRY,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(),
+            date: dayjsDate.add(i * 3, "day").toDate(),
             type: WaterEventType.WATERED,
           },
         ])
@@ -298,7 +303,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("increases the time with the last event being too wet", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -306,15 +311,15 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(),
+            date: dayjsDate.add(i * 3, "day").toDate(),
             type: WaterEventType.SKIPPED_TOO_WET,
           },
         ])
@@ -324,7 +329,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("adds one day for snoozed events", () => {
     const dayjsDate = dayjs(new Date())
-    for (let i = 1; i < 10; i=i+2) {
+    for (let i = 1; i < 10; i = i + 2) {
       expect(
         _getDaysFromLastEventToNextWatering([
           {
@@ -332,15 +337,15 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i, 'day').toDate(),
+            date: dayjsDate.add(i, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*2, 'day').toDate(),
+            date: dayjsDate.add(i * 2, "day").toDate(),
             type: WaterEventType.WATERED,
           },
           {
-            date: dayjsDate.add(i*3, 'day').toDate(),
+            date: dayjsDate.add(i * 3, "day").toDate(),
             type: WaterEventType.SKIPPED_SNOOZED,
           },
         ])

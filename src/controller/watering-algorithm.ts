@@ -1,35 +1,28 @@
-import { WaterEventType, type WaterEvent } from "@prisma/client";
-import dayjs from "dayjs";
-import { median } from "mathjs";
-
-
-
-
+import { WaterEventType, type WaterEvent } from "@prisma/client"
+import dayjs from "dayjs"
+import { median } from "mathjs"
 
 export const TOO_WET_DAYS_TO_ADD_SCALER = 1 / 3
 export const TOO_DRY_DAYS_BETWEEN_SCALER = 2 / 3
 
 export type _WaterEvent = Pick<WaterEvent, "date" | "type">
 
-export function getDateOfNextWateringEvent(
-  events: _WaterEvent[],
-): Date {
+export function getDateOfNextWateringEvent(events: _WaterEvent[]): Date {
   if (events.length === 0) {
     return new Date()
   }
   const lastEvent = events[events.length - 1]!
-  const daysFromLastEventToNextWatering = _getDaysFromLastEventToNextWatering(
-    events,
-  )
+  const daysFromLastEventToNextWatering =
+    _getDaysFromLastEventToNextWatering(events)
   const dateOfNextWatering = dayjs(lastEvent.date).add(
     daysFromLastEventToNextWatering,
-    "day",
+    "day"
   )
   return dateOfNextWatering.toDate()
 }
 
 export function _getDaysFromLastEventToNextWatering(
-  events: _WaterEvent[],
+  events: _WaterEvent[]
 ): number {
   if (events.length === 0) {
     return 0
@@ -57,8 +50,9 @@ export function _getDaysFromLastEventToNextWatering(
 export function _getMedianDaysBeforeWatering(
   wateringEvents: _WaterEvent[]
 ): number {
-  const sortedEvents = wateringEvents
-    .sort((a, b) => a.date.getTime() - b.date.getTime())
+  const sortedEvents = wateringEvents.sort(
+    (a, b) => a.date.getTime() - b.date.getTime()
+  )
 
   const events = sortedEvents.map((event) => event.type)
   const dates = sortedEvents.map((event) => event.date)
@@ -66,7 +60,7 @@ export function _getMedianDaysBeforeWatering(
   const daysBetweenDates = _getDaysBetweenDates(...dates)
   const medianDaysBeforeWatering = _getMedianDaysBeforeWateringHelper(
     daysBetweenDates,
-    events.slice(1),
+    events.slice(1)
   )
   return medianDaysBeforeWatering
 }
@@ -126,24 +120,23 @@ export function _getDaysBetweenDates(...dates: Date[]): number[] {
   return daysBetweenDates
 }
 
-
 if (require.main === module) {
   const out = _getDaysFromLastEventToNextWatering([
     {
       date: new Date("2021-01-01"),
-      type: WaterEventType.WATERED
+      type: WaterEventType.WATERED,
     },
     {
       date: new Date("2021-01-04"),
-      type: WaterEventType.WATERED
+      type: WaterEventType.WATERED,
     },
     {
       date: new Date("2021-01-07"),
-      type: WaterEventType.WATERED
+      type: WaterEventType.WATERED,
     },
     {
       date: new Date("2021-01-09"),
-      type: WaterEventType.SKIPPED_SNOOZED
+      type: WaterEventType.SKIPPED_SNOOZED,
     },
   ])
   console.log(out)
