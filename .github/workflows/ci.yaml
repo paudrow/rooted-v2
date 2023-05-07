@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
 jobs:
   ci:
 
@@ -13,7 +18,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x, 20.x]
-
+    
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
