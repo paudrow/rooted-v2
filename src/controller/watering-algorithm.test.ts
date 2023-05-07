@@ -319,7 +319,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
             type: WaterEventType.WATERED_TOO_DRY,
           },
         ])
-      ).toBeCloseTo(i * (TOO_DRY_DAYS_BETWEEN_SCALER ** 2))
+      ).toBeCloseTo(i * TOO_DRY_DAYS_BETWEEN_SCALER ** 2)
     }
   })
 
