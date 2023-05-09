@@ -16,6 +16,7 @@ model Plant {
   name       String
   pictureUrl String?
   WaterEvent WaterEvent[]
+  userId     String
 }
 
 enum WaterEventType {
@@ -32,4 +33,5 @@ model WaterEvent {
   plantId String
   note    String?
   type    WaterEventType
+  userId  String
 }
