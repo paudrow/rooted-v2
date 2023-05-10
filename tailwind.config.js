@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/* @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -68,6 +68,11 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        'header': ['"Paytone One"'],
+        'subhead' : ['"Open Sans"'],
+        'sans': ['Catamaran'],
       },
     },
   },

@@ -1,4 +1,5 @@
 import MishComponent from "@/components/mish-component"
+import { ThemeToggle } from "@/components/theme-toggle"
 import {
   Tooltip,
   TooltipContent,
@@ -13,20 +14,23 @@ export default function MishDev() {
       <MishComponent2 />
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger><span className="text-blue-700">secret</span></TooltipTrigger>
+          <TooltipTrigger><span className="font-header">secret</span></TooltipTrigger>
           <TooltipContent>
-            <p>Add to library</p>
+            <p>hi</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
+      <ThemeToggle />
     </div>
   )
 }
 
 export function MishComponent2() {
   return (
-    <div>
-      <h1 className="text-xl text-red-900"> hi </h1>
+    <><div>
+      <h1 className="text-xl"> catamaran </h1>
     </div>
+
+    </>
   )
 }
