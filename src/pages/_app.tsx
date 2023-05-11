@@ -3,12 +3,12 @@ import { type AppType } from "next/app"
 import { api } from "@/utils/api"
 
 import "@/styles/globals.css"
+import Head from "next/head"
 import { ClerkProvider } from "@clerk/nextjs"
 
 import { Toaster } from "@/components/ui/toaster"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
-import Head from "next/head"
 
 import "@uploadthing/react/styles.css"
 
@@ -33,7 +33,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <link href="https://fonts.googleapis.com/css2?family=Catamaran&family=Open+Sans:ital,wght@1,600&family=Paytone+One&display=swap" rel="stylesheet" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Catamaran&family=Open+Sans:ital,wght@1,600&family=Paytone+One&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <div className="text-primary">
         <ClerkProvider>
