@@ -35,13 +35,15 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <Head>
         <link href="https://fonts.googleapis.com/css2?family=Catamaran&family=Open+Sans:ital,wght@1,600&family=Paytone+One&display=swap" rel="stylesheet" />
       </Head>
-      <ClerkProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Component {...pageProps} />
-          <Toaster />
-          <TailwindIndicator />
-        </ThemeProvider>
-      </ClerkProvider>
+      <div className="text-primary">
+        <ClerkProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Component {...pageProps} />
+            <Toaster />
+            <TailwindIndicator />
+          </ThemeProvider>
+        </ClerkProvider>
+      </div>
     </>
   )
 }

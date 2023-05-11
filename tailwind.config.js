@@ -5,7 +5,7 @@ module.exports = {
     './src/pages/**/*.{ts,tsx}',
     './src/components/**/*.{ts,tsx}',
     './src/app/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -21,6 +21,7 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        grey: "hsl(var(--fill-grey))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -71,10 +72,19 @@ module.exports = {
       },
       fontFamily: {
         'header': ['"Paytone One"'],
-        'subhead' : ['"Open Sans"'],
+        'subhead': ['"Open Sans"'],
         'sans': ['Catamaran'],
       },
-    },
+      borderWidth: {
+        DEFAULT: '1px',
+        '0': '0',
+        '2': '2px',
+        '3': '3px',
+        '4': '4px',
+        '6': '6px',
+        '8': '8px',
+      }
+    }
   },
   plugins: [require("tailwindcss-animate")],
 }
