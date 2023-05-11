@@ -27,7 +27,7 @@ export default function MyPlants() {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <ThemeToggle />
-      <div className="text-3xl font-header pt-4 uppercase">
+      <div className="text-3xl font-header pt-4 uppercase dark:text-accent text-primary">
         My Plants
       </div>
       <div className="py-6 w-96">
@@ -53,7 +53,7 @@ export function Plant(props: { selected: boolean, name: string, imageUrl?: strin
         </div>
         <div className=" grow flex flex-col py-2 mr-2 gap-1">
           <div className=""> Plant {props.name}</div>
-          <div className="flex flex-row justify-between text-sm">
+          <div className="flex flex-row justify-between opacity-70">
             <div>avg water: 6 days</div>
             <div>last water: 4 days ago</div>
           </div>
