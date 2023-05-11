@@ -27,10 +27,10 @@ export default function MyPlants() {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <ThemeToggle />
-      <div className="text-3xl font-header p-4 uppercase">
+      <div className="text-3xl font-header pt-4 uppercase">
         My Plants
       </div>
-      <div className="m-2 w-96">
+      <div className="py-6 w-96">
         <SearchBar />
       </div>
       <div className="flex flex-col gap-3 max-w-sm w-full">
