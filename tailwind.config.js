@@ -22,6 +22,7 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         grey: "hsl(var(--fill-grey))",
+        buttonBackground: "hsl(var(--button-background))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

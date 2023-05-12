@@ -29,10 +29,10 @@ export default function MyPlants() {
       <div className="pt-4 font-header text-3xl uppercase text-primary dark:text-accent">
         My Plants
       </div>
-      <div className="w-96 py-6">
-        <SearchBar />
-      </div>
-      <div className="flex w-full max-w-sm flex-col gap-3">
+      <div className="flex w-full flex-col gap-3 px-3 md:max-w-sm">
+        <div className="pt-4">
+          <SearchBar />
+        </div>
         <Plant
           selected={true}
           name={`monstera`}
