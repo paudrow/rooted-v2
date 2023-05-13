@@ -1,3 +1,4 @@
+import { useState } from "react"
 import Image from "next/image"
 import { Droplet, Hand, Sprout } from "lucide-react"
 
@@ -17,34 +18,61 @@ import {
 import MishComponent from "@/components/mish-component"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-export default function MyPlants() {
+export default function Notifications() {
   const numbers: number[] = []
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 4; i++) {
     numbers.push(i)
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center gap-4">
       <ThemeToggle />
-      <div className="pt-4 font-subhead text-3xl text-primary dark:text-accent">
+      <div className="font-subhead text-3xl text-primary dark:text-accent">
         Plants to check on
       </div>
-      <div className="py-4 text-sm">
+      <div className="text-sm">
         click and hold action buttons for more soil conditions
       </div>
       <div className="flex w-full flex-col gap-3 px-3 md:max-w-sm">
-        <Plant name={`monstera`} imageUrl="/monstera-albo.jpeg" />
+        <Plant
+          name={`monstera`}
+          imageUrl="/monstera-albo.jpeg"
+          completed={false}
+        />
         {numbers.map((num) => (
-          <Plant key={num} name={`plant ${num}`} />
+          <Plant key={num} name={`plant ${num}`} completed={false} />
+        ))}
+      </div>
+      <div />
+      <MarkAllButton />
+      <div />
+      <div className="font-subhead text-lg">Completed</div>
+      <div className="flex w-full flex-col gap-3 px-3 md:max-w-sm">
+        <Plant
+          name={`monstera`}
+          imageUrl="/monstera-albo.jpeg"
+          completed={true}
+        />
+        {numbers.map((num) => (
+          <Plant key={num} name={`plant ${num}`} completed={true} />
         ))}
       </div>
     </div>
   )
 }
 
-export function Plant(props: { name: string; imageUrl?: string }) {
+export function Plant(props: {
+  name: string
+  imageUrl?: string
+  completed: boolean
+}) {
   return (
-    <div className="flex flex-row items-center gap-4 rounded-xl border-3 border-destructive bg-grey p-2">
+    <div
+      className={cn(
+        props.completed ? "border-border" : "border-destructive",
+        "flex flex-row items-center gap-4 rounded-xl border-3  bg-grey p-2"
+      )}
+    >
       <div
         className={cn(
           !props.imageUrl && "border border-primary",
@@ -69,24 +97,42 @@ export function Plant(props: { name: string; imageUrl?: string }) {
         </div>
       </div>
       <div className="flex flex-row gap-3">
-        <Button selected={false} content={<Hand />} />
-        <Button selected={true} content={<Droplet />} />
+        <Button isSelectedInitially={false} content={<Hand />} />
+        <Button isSelectedInitially={true} content={<MyDroplet />} />
       </div>
     </div>
   )
 }
 
-export function Button(props: { selected: boolean; content: JSX.Element }) {
+export function Button(props: {
+  isSelectedInitially: boolean
+  content: JSX.Element
+}) {
+  const [selected, setSelected] = useState(props.isSelectedInitially)
   return (
     <div
+      onClick={() => setSelected(!selected)}
       className={cn(
-        props.selected
+        selected
           ? "bg-accent dark:border-primary dark:bg-border"
-          : "border-accent bg-buttonBackground",
+          : "border-border bg-buttonBackground",
         "flex h-12 w-12 items-center justify-center rounded-full border-2"
       )}
     >
       {props.content}
     </div>
   )
+}
+
+export function MarkAllButton() {
+  return (
+    <div className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full border-3 border-border bg-buttonBackground">
+      <MyDroplet className="h-10 w-10" />
+      <p>for all</p>
+    </div>
+  )
+}
+
+export function MyDroplet(props: { className?: string }) {
+  return <Droplet className={cn("text-teal-300", props.className)} />
 }
