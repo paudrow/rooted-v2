@@ -27,7 +27,7 @@ export default function Notifications() {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4">
       <ThemeToggle />
-      <div className="font-subhead text-3xl text-primary dark:text-accent">
+      <div className="font-subhead text-2xl text-primary dark:text-accent">
         Plants to check on
       </div>
       <div className="text-sm">
