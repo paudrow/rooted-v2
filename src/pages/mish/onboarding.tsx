@@ -38,7 +38,7 @@ export default function OnBoarding() {
                   setIndex((index - 1 + pages.length) % pages.length)
                 }}
               >
-                <ArrowLeftCircle className="h-10 w-10" />
+                <ArrowLeftCircle className="h-10 w-10 text-border" />
                 <p className="p-2">back</p>
               </div>
             )}
@@ -48,7 +48,7 @@ export default function OnBoarding() {
                 setIndex((index + 1) % pages.length)
               }}
             >
-              <ArrowRightCircle className="h-10 w-10" />
+              <ArrowRightCircle className="h-10 w-10 text-border" />
               <p className="p-2">next</p>
             </div>
           </div>
