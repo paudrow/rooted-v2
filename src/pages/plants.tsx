@@ -3,9 +3,10 @@ import Head from "next/head"
 import { api } from "@/utils/api"
 
 import { PageLayout } from "@/components/layout"
+import Link from "next/link"
 
 const Home: NextPage = () => {
-  const { data, isLoading } = api.plant.getForUser.useQuery()
+  const { data, isLoading } = api.plant.getAll.useQuery()
 
   if (isLoading) {
     return (
@@ -26,7 +27,11 @@ const Home: NextPage = () => {
       </Head>
       <PageLayout>
         <div className="flex flex-col justify-center">
-          {data && data.map((plant) => <div key={plant.id}>{plant.name}</div>)}
+          {data && data.map((plant) => (
+            <Link key={plant.id} href={`/plant/${plant.id}`}>
+              <div>{plant.name}</div>
+            </Link>
+          ))}
         </div>
       </PageLayout>
     </>

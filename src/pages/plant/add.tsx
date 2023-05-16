@@ -14,7 +14,7 @@ const Home: NextPage = () => {
     onSuccess: () => {
       console.log("success")
       setPlantName("")
-      void ctx.plant.getForUser.invalidate()
+      void ctx.plant.getAll.invalidate()
     },
     onError: (err) => {
       console.log(err)
