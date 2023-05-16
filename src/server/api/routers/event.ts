@@ -1,11 +1,11 @@
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc"
-import { z } from "zod"
 import { WaterEventType } from "@prisma/client"
+import { z } from "zod"
 
 export const eventRouter = createTRPCRouter({
   create: privateProcedure
     .input(
-      z.object({  
+      z.object({
         plantId: z.string(),
         date: z.string(),
         type: z.nativeEnum(WaterEventType),
