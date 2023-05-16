@@ -3,9 +3,10 @@ import Head from "next/head"
 import { api } from "@/utils/api"
 
 const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
-  const { data } = api.plant.getById.useQuery({
+  const { data, isLoading } = api.plant.getById.useQuery({
     id,
   })
+  if (isLoading) return <div>Loading...</div>
   if (!data) return <div>404</div>
 
   return (
@@ -20,7 +21,7 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = (context) => {
   const id = context.params?.id
 
   if (typeof id !== "string") throw new Error("no id")
