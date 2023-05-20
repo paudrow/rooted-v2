@@ -3,7 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { api } from "@/utils/api"
 // import { api } from "@/utils/api"
-import { SignInButton, UserButton, useUser } from "@clerk/nextjs"
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
 import { type UserResource } from "@clerk/types"
 import { type Plant } from "@prisma/client"
 import { Plus, Sprout } from "lucide-react"
@@ -22,13 +22,7 @@ const Home: NextPage = () => {
       {!isLoaded && <LoadingPage />}
       {!!isLoaded && (
         <>
-          {!isSignedIn && (
-            <div className="flex h-full w-full items-center justify-center">
-              <Button variant={"default"}>
-                <SignInButton />
-              </Button>
-            </div>
-          )}
+          {!isSignedIn && <SignUpOrSignIn />}
           {!!isSignedIn && (
             <>
               <Head>
@@ -46,6 +40,38 @@ const Home: NextPage = () => {
         </>
       )}
     </PageLayout>
+  )
+}
+
+const SignUpOrSignIn = () => {
+  return (
+    <>
+      <Head>
+        <title>Rooted Signin</title>
+      </Head>
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="absolute right-0 top-0">
+          <ThemeToggle />
+        </div>
+        <div className="text-center">
+          <h1 className="text-4xl font-bold">Rooted</h1>
+          <p className="font-thin italic">Grow with your plants</p>
+          <div className="py-4" />
+          <Button variant={"default"} className="w-full">
+            <SignUpButton />
+          </Button>
+          <div className="py-2" />
+          <div className="flex flex-col">
+            <span className="text-foreground opacity-70">
+              Already have an account?
+            </span>
+            <Button variant={"secondary"}>
+              <SignInButton />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -106,7 +132,7 @@ const SignedInNavBar = () => {
       </div>
       <div className="flex flex-row items-center">
         <ThemeToggle />
-        <UserButton />
+        <UserButton afterSignOutUrl="/" />
       </div>
     </div>
   )
