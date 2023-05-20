@@ -19,9 +19,6 @@ const Home: NextPage = () => {
 
   return (
     <PageLayout>
-      <Head>
-        <title>Rooted Dashboard</title>
-      </Head>
       {!isLoaded && <LoadingPage />}
       {!!isLoaded && (
         <>
@@ -34,6 +31,9 @@ const Home: NextPage = () => {
           )}
           {!!isSignedIn && (
             <>
+              <Head>
+                <title>Rooted Dashboard</title>
+              </Head>
               <div className="border-b px-4">
                 <SignedInNavBar />
               </div>
