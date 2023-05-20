@@ -2,16 +2,15 @@ import { type NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import { api } from "@/utils/api"
-// import { api } from "@/utils/api"
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
 import { type UserResource } from "@clerk/types"
 import { type Plant } from "@prisma/client"
 import { Plus, Sprout } from "lucide-react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PageLayout } from "@/components/layout"
 import LoadingPage from "@/components/loading-page"
+import SignedInNavBar from "@/components/signed-in-navbar"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const Home: NextPage = () => {
@@ -28,13 +27,8 @@ const Home: NextPage = () => {
               <Head>
                 <title>Rooted Dashboard</title>
               </Head>
-              <div className="border-b px-4">
-                <SignedInNavBar />
-              </div>
-              <div className="p-4" />
-              <div className="px-4">
-                <Dashboard user={user} />
-              </div>
+              <SignedInNavBar />
+              <Dashboard user={user} />
             </>
           )}
         </>
@@ -79,7 +73,7 @@ const Dashboard = ({ user }: { user: UserResource }) => {
   const { data, isLoading: isPlantsLoading } = api.plant.getAll.useQuery()
 
   return (
-    <>
+    <div className="px-4">
       <div className="flex w-full flex-row items-center justify-between">
         <div className="text-2xl">
           {user.firstName ? `${user.firstName}'s` : "Your"} plants
@@ -99,7 +93,7 @@ const Dashboard = ({ user }: { user: UserResource }) => {
           {data && data.map((plant) => <Plant key={plant.id} plant={plant} />)}
         </div>
       )}
-    </>
+    </div>
   )
 }
 
@@ -119,29 +113,6 @@ const Plant = ({ plant }: { plant: Plant }) => {
         </div>
         {plant.name}
       </div>
-    </Link>
-  )
-}
-
-const SignedInNavBar = () => {
-  return (
-    <div className="flex h-14 w-full flex-row justify-between">
-      <div className="flex flex-row items-center gap-4">
-        <NavBarButton href="/" text="Home" />
-        <NavBarButton href="/events" text="Events" />
-      </div>
-      <div className="flex flex-row items-center">
-        <ThemeToggle />
-        <UserButton afterSignOutUrl="/" />
-      </div>
-    </div>
-  )
-}
-
-const NavBarButton = (props: { href: string; text: string }) => {
-  return (
-    <Link href={props.href}>
-      <div>{props.text}</div>
     </Link>
   )
 }

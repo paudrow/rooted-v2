@@ -1,29 +1,55 @@
 import type { GetStaticProps, NextPage } from "next"
 import Head from "next/head"
 import { api } from "@/utils/api"
+import { Sprout } from "lucide-react"
+
+import { PageLayout } from "@/components/layout"
+import LoadingPage from "@/components/loading-page"
+import SignedInNavBar from "@/components/signed-in-navbar"
 
 const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
-  const { data, isLoading } = api.plant.getById.useQuery({
-    id,
-  })
-  if (isLoading) return <div>Loading...</div>
-  if (!data) return <div>404</div>
+  const { data: plantData, isLoading: isPlantLoading } =
+    api.plant.getById.useQuery({
+      id,
+    })
+
+  if (isPlantLoading) return <LoadingPage />
+
+  if (!plantData)
+    return (
+      <>
+        <PageLayout>
+          <Head>
+            <title>Plant not found</title>
+          </Head>
+          <h1 className="flex grow items-center justify-center">
+            Plant not found
+          </h1>
+        </PageLayout>
+      </>
+    )
 
   return (
     <>
-      <Head>
-        <title>{data.name}</title>
-      </Head>
-      <div className="flex flex-col items-center justify-center">
-        {data.imageUrl && (
-          <img
-            src={data.imageUrl}
-            alt={data.name}
-            className="h-20 w-20 rounded-full"
-          />
-        )}
-        <h1>{data.name}</h1>
-      </div>
+      <PageLayout>
+        <Head>
+          <title>{plantData.name}</title>
+        </Head>
+        <SignedInNavBar />
+        <div className="flex grow flex-col items-center">
+          <div className="h-20 w-20 overflow-hidden rounded-full border border-foreground">
+            {!plantData.imageUrl && (
+              <div className="flex h-full w-full items-center justify-center bg-secondary">
+                <Sprout className="h-16 w-16" />
+              </div>
+            )}
+            {!!plantData.imageUrl && (
+              <img src={plantData.imageUrl} alt={plantData.name} />
+            )}
+          </div>
+          <h1>{plantData.name}</h1>
+        </div>
+      </PageLayout>
     </>
   )
 }
