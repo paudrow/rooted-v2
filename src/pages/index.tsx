@@ -55,7 +55,9 @@ const Dashboard = ({ user }: { user: UserResource }) => {
   return (
     <>
       <div className="flex w-full flex-row items-center justify-between">
-        <div className="text-2xl">{user.firstName ? `${user.firstName}'s`: "Your"} plants</div>
+        <div className="text-2xl">
+          {user.firstName ? `${user.firstName}'s` : "Your"} plants
+        </div>
         <Link href="/add-plant">
           <Button variant={"secondary"} className="flex flex-row gap-1">
             <Plus size={24} />
