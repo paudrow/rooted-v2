@@ -26,11 +26,22 @@ const Home: NextPage = () => {
         <title>Your Plants!</title>
       </Head>
       <PageLayout>
-        <div className="flex flex-col justify-center">
+        <Link href={"/plant/add"}>Add plant</Link>
+        <div className="text-xl">My plants</div>
+        <div className="flex flex-col justify-center gap-4">
           {data &&
             data.map((plant) => (
               <Link key={plant.id} href={`/plant/${plant.id}`}>
-                <div>{plant.name}</div>
+                <div className="flex flex-row items-center gap-4 rounded-lg border-2 p-4">
+                  {plant.imageUrl && (
+                    <img
+                      src={plant.imageUrl}
+                      alt={plant.name}
+                      className="h-10 w-10 rounded-full"
+                    />
+                  )}
+                  {plant.name}
+                </div>
               </Link>
             ))}
         </div>

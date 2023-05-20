@@ -6,6 +6,7 @@ export const plantRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
+        imageUrl: z.string().url().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -16,6 +17,7 @@ export const plantRouter = createTRPCRouter({
         data: {
           name: input.name,
           userId: ctx.userId,
+          imageUrl: input.imageUrl,
         },
       })
     }),
@@ -24,6 +26,7 @@ export const plantRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         name: z.string(),
+        imageUrl: z.string().url().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -37,6 +40,7 @@ export const plantRouter = createTRPCRouter({
         data: {
           name: input.name,
           userId: ctx.userId,
+          imageUrl: input.imageUrl,
         },
       })
     }),

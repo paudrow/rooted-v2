@@ -14,7 +14,7 @@ generator client {
 model Plant {
   id         String       @id @default(cuid())
   name       String
-  pictureUrl String?
+  imageUrl   String?      @map("pictureUrl")
   WaterEvent WaterEvent[]
   userId     String
 }

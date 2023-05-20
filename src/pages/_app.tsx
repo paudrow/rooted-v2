@@ -8,6 +8,8 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
+import "@uploadthing/react/styles.css"
+
 export const metadata: Metadata = {
   // title: {
   //   default: siteConfig.name,
