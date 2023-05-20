@@ -1,6 +1,6 @@
 /** server/uploadthing.ts */
 import { type NextApiRequest, type NextApiResponse } from "next"
-import { currentUser } from "@clerk/nextjs/server"
+// import { currentUser } from "@clerk/nextjs/server"
 import { createUploadthing, type FileRouter } from "uploadthing/next-legacy"
 
 const f = createUploadthing()
@@ -20,7 +20,7 @@ export const ourFileRouter = {
     .maxSize("1GB")
     .middleware(async (req, res) => {
       // This code runs on your server before upload
-      const user = await auth(req, res)
+      const user = auth(req, res)
 
       // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized")
