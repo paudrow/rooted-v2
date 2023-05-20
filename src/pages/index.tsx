@@ -1,7 +1,7 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 // import { api } from "@/utils/api"
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs"
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs"
 
 import { Calendar } from "@/components/ui/calendar"
 import { PageLayout } from "@/components/layout"
@@ -24,7 +24,7 @@ const Home: NextPage = () => {
           {!!isSignedIn && (
             <div className="flex flex-col items-center justify-center">
               <div className="flex justify-center">Hi {user.firstName}</div>
-              <SignOutButton />
+              <UserButton />
             </div>
           )}
         </div>
