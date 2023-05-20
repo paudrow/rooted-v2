@@ -11,43 +11,41 @@ import { Plus, Sprout } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PageLayout } from "@/components/layout"
-import { ThemeProvider } from "@/components/theme-provider"
+import LoadingPage from "@/components/loading-page"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const Home: NextPage = () => {
   const { user, isSignedIn, isLoaded } = useUser()
 
   return (
-    <>
+    <PageLayout>
       <Head>
-        <title>Rooted App</title>
-        <meta name="description" content="Grow with your plants!" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Rooted Dashboard</title>
       </Head>
-      <PageLayout>
-        {!isLoaded && <LoadingPage />}
-        {!!isLoaded && (
-          <>
-            {!isSignedIn && (
+      {!isLoaded && <LoadingPage />}
+      {!!isLoaded && (
+        <>
+          {!isSignedIn && (
+            <div className="flex h-full w-full items-center justify-center">
               <Button variant={"default"}>
                 <SignInButton />
               </Button>
-            )}
-            {!!isSignedIn && (
-              <>
-                <div className="border-b px-4">
-                  <SignedInNavBar />
-                </div>
-                <div className="p-4" />
-                <div className="px-4">
-                  <Dashboard user={user} />
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </PageLayout>
-    </>
+            </div>
+          )}
+          {!!isSignedIn && (
+            <>
+              <div className="border-b px-4">
+                <SignedInNavBar />
+              </div>
+              <div className="p-4" />
+              <div className="px-4">
+                <Dashboard user={user} />
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </PageLayout>
   )
 }
 
@@ -57,7 +55,7 @@ const Dashboard = ({ user }: { user: UserResource }) => {
   return (
     <>
       <div className="flex w-full flex-row items-center justify-between">
-        <div className="text-2xl">{`${user.firstName}'s`} plants</div>
+        <div className="text-2xl">{user.firstName ? `${user.firstName}'s`: "Your"} plants</div>
         <Link href="/add-plant">
           <Button variant={"secondary"} className="flex flex-row gap-1">
             <Plus size={24} />
@@ -117,30 +115,6 @@ const NavBarButton = (props: { href: string; text: string }) => {
     <Link href={props.href}>
       <div>{props.text}</div>
     </Link>
-  )
-}
-
-const LoadingPage = (props: { spinnerSize?: number }) => {
-  return (
-    <div className="flex grow items-center justify-center">
-      <LoadingSpinner size={props.spinnerSize || 20} />
-    </div>
-  )
-}
-
-const LoadingSpinner = (props: { size: number }) => {
-  return (
-    <div
-      className={cn(
-        `h-${props.size} w-${props.size}`,
-        "inline-block animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-      )}
-      role="status"
-    >
-      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-        Loading...
-      </span>
-    </div>
   )
 }
 
