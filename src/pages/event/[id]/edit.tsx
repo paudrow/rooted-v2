@@ -112,7 +112,7 @@ const EditEventPage: NextPage<{ id: string }> = ({ id }) => {
           <h1 className="text-2xl">Edit Event</h1>
 
           <PickDatePopover
-            date={eventDate}
+            startingDate={eventDate}
             setDate={setEventDate}
             isTodayOrEarlier={true}
           />

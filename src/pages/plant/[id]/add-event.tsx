@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { use, useState } from "react"
 import type { GetStaticProps, NextPage } from "next"
 import Head from "next/head"
 import { api } from "@/utils/api"
@@ -12,12 +12,14 @@ import { LoadingPage } from "@/components/loading-page"
 import PickDatePopover from "@/components/pick-date-popover"
 import SelectWateringEvent from "@/components/select-watering-event"
 import SignedInNavBar from "@/components/signed-in-navbar"
+import { useRouter } from "next/router"
 
 const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
   const [eventType, setEventType] = useState<WaterEventType | null>(null)
   const [eventDate, setEventDate] = useState<Date>(new Date())
 
   const { toast } = useToast()
+  const router = useRouter()
 
   const { data: plantData, isLoading: isPlantLoading } =
     api.plant.getById.useQuery({
@@ -25,11 +27,12 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
     })
 
   const { mutate, isLoading: isAdding } = api.event.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async () => {
       toast({
         title: "Success",
         description: `Event added to ${plantData?.name ?? "plant"}`,
       })
+      await router.push(`/plant/${plantId}`)
     },
     onError: (error) => {
       toast({
@@ -57,7 +60,7 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
             {'"'}
           </h1>
           <PickDatePopover
-            date={eventDate}
+            startingDate={eventDate}
             setDate={setEventDate}
             isTodayOrEarlier={true}
           />
@@ -74,7 +77,7 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
                 mutate({
                   plantId: plantId,
                   type: eventType!,
-                  date: new Date().toISOString(),
+                  date: eventDate,
                 })
               }}
             >

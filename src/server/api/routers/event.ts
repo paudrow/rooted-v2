@@ -7,7 +7,7 @@ export const eventRouter = createTRPCRouter({
     .input(
       z.object({
         plantId: z.string(),
-        date: z.string(),
+        date: z.date(),
         type: z.nativeEnum(WaterEventType),
         note: z.string().optional(),
       })
@@ -138,11 +138,11 @@ export const eventRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       if (!ctx.userId) {
         throw new Error("User is not authenticated")
       }
-      return ctx.prisma.waterEvent.delete({
+      await ctx.prisma.waterEvent.delete({
         where: {
           id: input.id,
         },

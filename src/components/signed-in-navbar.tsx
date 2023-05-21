@@ -9,7 +9,7 @@ export const SignedInNavBar = () => {
       <div className="border-b-2 border-secondary px-4">
         <div className="flex h-14 w-full flex-row justify-between">
           <div className="flex flex-row items-center gap-4">
-            <NavBarButton href="/" text="Home" />
+            <NavBarButton href="/" text="Plants" />
             <NavBarButton href="/events" text="Events" />
           </div>
           <div className="flex flex-row items-center">

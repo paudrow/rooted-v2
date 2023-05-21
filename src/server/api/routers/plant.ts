@@ -77,16 +77,18 @@ export const plantRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       if (!ctx.userId) {
         throw new Error("User is not authenticated")
       }
-      return ctx.prisma.plant.delete({
+      await ctx.prisma.waterEvent.deleteMany({
+        where: {
+          plantId: input.id,
+        },
+      })
+      await ctx.prisma.plant.delete({
         where: {
           id: input.id,
-        },
-        include: {
-          WaterEvent: true,
         },
       })
     }),

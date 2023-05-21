@@ -12,7 +12,7 @@ export function LoadingPage() {
 
 export function GrowingLoadingSpinner() {
   return (
-    <div className="flex grow items-center justify-center">
+    <div className="flex h-full grow items-center justify-center">
       <LoadingSpinner />
     </div>
   )
