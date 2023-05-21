@@ -39,6 +39,7 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
       id,
     })
 
+  const router = useRouter()
   const { mutate: updateMutation, isLoading: isUpdating } =
     api.plant.updateById.useMutation({
       onSuccess: () => {
@@ -46,7 +47,7 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
           title: "Success",
           description: "Plant updated",
         })
-        void ctx.plant.getById.invalidate({ id })
+        router.push(`/plant/${id}`)
       },
       onError: (err) => {
         toast({
@@ -57,7 +58,6 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
       },
     })
 
-  const router = useRouter()
   const { mutate: deleteMutation, isLoading: isDeleting } =
     api.plant.deleteById.useMutation({
       onSuccess: async () => {
