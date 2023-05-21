@@ -1,3 +1,6 @@
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
+
 const FUN_PLANT_NAMES: string[] = [
   "Glorious Gloriousum",
   "Fantastic Ficus",
@@ -29,8 +32,8 @@ export function PlantNameInput(props: {
 }) {
   return (
     <>
-      <label htmlFor="plant-name">Plant Name</label>
-      <input
+      <Label htmlFor="plant-name">Plant Name</Label>
+      <Input
         id="plant-name"
         type="text"
         value={props.plantName}

@@ -71,4 +71,20 @@ export const plantRouter = createTRPCRouter({
         },
       })
     }),
+  deleteById: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      if (!ctx.userId) {
+        throw new Error("User is not authenticated")
+      }
+      return ctx.prisma.plant.delete({
+        where: {
+          id: input.id,
+        },
+      })
+    }),
 })

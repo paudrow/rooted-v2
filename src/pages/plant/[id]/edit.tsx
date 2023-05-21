@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react"
 import { type GetStaticProps, type NextPage } from "next"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { api } from "@/utils/api"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import ErrorPage from "@/components/error-page"
@@ -27,22 +39,42 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
       id,
     })
 
-  const { mutate, isLoading: isUpdating } = api.plant.update.useMutation({
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Plant updated",
-      })
-      void ctx.plant.getById.invalidate({ id })
-    },
-    onError: (err) => {
-      toast({
-        title: "Error",
-        description: err.message,
-        variant: "destructive",
-      })
-    },
-  })
+  const { mutate: updateMutation, isLoading: isUpdating } =
+    api.plant.update.useMutation({
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Plant updated",
+        })
+        void ctx.plant.getById.invalidate({ id })
+      },
+      onError: (err) => {
+        toast({
+          title: "Error",
+          description: err.message,
+          variant: "destructive",
+        })
+      },
+    })
+
+  const router = useRouter()
+  const { mutate: deleteMutation, isLoading: isDeleting } =
+    api.plant.deleteById.useMutation({
+      onSuccess: async () => {
+        toast({
+          title: "Success",
+          description: "Plant deleted",
+        })
+        await router.push("/")
+      },
+      onError: (err) => {
+        toast({
+          title: "Error",
+          description: err.message,
+          variant: "destructive",
+        })
+      },
+    })
 
   useEffect(() => {
     if (!plantData) return
@@ -67,17 +99,31 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
       </Head>
       <PageLayout>
         <SignedInNavBar />
-        <h1 className="text-2xl">Update {plantData.name}</h1>
-        <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
-        <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
-        <Button
-          onClick={() =>
-            mutate({ id: plantData.id, name: plantName, imageUrl })
-          }
-          disabled={isUpdating || !hasChanges()}
-        >
-          Update Plant
-        </Button>
+        <div className="flex flex-col gap-4 px-4">
+          <h1 className="text-2xl">Update {plantData.name}</h1>
+
+          <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
+          <div>
+            <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
+          </div>
+          <div className="flex justify-start">
+            <Button
+              onClick={() =>
+                updateMutation({ id: plantData.id, name: plantName, imageUrl })
+              }
+              disabled={isUpdating || !hasChanges()}
+            >
+              Update Plant
+            </Button>
+          </div>
+          <div>
+            <DeleteButton
+              onClick={() => deleteMutation({ id: plantData.id })}
+              isDeleting={isDeleting}
+            />
+          </div>
+          <div className="flex justify-start"></div>
+        </div>
       </PageLayout>
     </>
   )
@@ -99,4 +145,32 @@ export const getStaticProps: GetStaticProps = (context) => {
 
 export const getStaticPaths = () => {
   return { paths: [], fallback: "blocking" }
+}
+
+function DeleteButton(props: { onClick: () => void; isDeleting: boolean }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button variant="destructive">Delete plant</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            hidden={false}
+            onClick={props.onClick}
+            disabled={props.isDeleting}
+          >
+            Delete Account
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
 }
