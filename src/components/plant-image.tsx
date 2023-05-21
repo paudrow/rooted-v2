@@ -21,7 +21,11 @@ export function PlantImage(props: {
         </div>
       )}
       {!!props.imageUrl && (
-        <img src={props.imageUrl} alt={`The "${props.name}" plant`} />
+        <img
+          className="h-full w-full object-cover"
+          src={props.imageUrl}
+          alt={`The "${props.name}" plant`}
+        />
       )}
     </div>
   )

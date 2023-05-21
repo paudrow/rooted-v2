@@ -13,7 +13,7 @@ export function LoadingPage() {
 export function GrowingLoadingSpinner(props: { spinnerSize?: number }) {
   return (
     <div className="flex grow items-center justify-center">
-      <LoadingSpinner size={props.spinnerSize || 20} />
+      <LoadingSpinner size={props.spinnerSize || 24} />
     </div>
   )
 }

@@ -87,7 +87,12 @@ const Dashboard = ({ user }: { user: UserResource }) => {
       {!isPlantsLoading && (
         <div className="flex flex-col justify-center gap-4">
           {!data && <div>Something went wrong</div>}
-          {data && data.map((plant) => <Plant key={plant.id} plant={plant} />)}
+          {data &&
+            data.map((plant) => (
+              <Link key={plant.id} href={`/plant/${plant.id}`}>
+                <Plant plant={plant} />
+              </Link>
+            ))}
         </div>
       )}
     </div>
@@ -96,17 +101,15 @@ const Dashboard = ({ user }: { user: UserResource }) => {
 
 const Plant = ({ plant }: { plant: Plant }) => {
   return (
-    <Link href={`/plant/${plant.id}`}>
-      <div className="flex flex-row items-center gap-4 rounded-lg border p-4">
-        <PlantImage
-          imageUrl={plant.imageUrl}
-          name={plant.name}
-          iconSize={6}
-          size={10}
-        />
-        {plant.name}
-      </div>
-    </Link>
+    <div className="flex flex-row items-center gap-4 rounded-lg border p-4">
+      <PlantImage
+        imageUrl={plant.imageUrl}
+        name={plant.name}
+        iconSize={8}
+        size={10}
+      />
+      {plant.name}
+    </div>
   )
 }
 

@@ -5,6 +5,7 @@ import { api } from "@/utils/api"
 import { type WaterEventType } from "@prisma/client"
 
 import { Button } from "@/components/ui/button"
+import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
 import PickDatePopover from "@/components/pick-date-popover"
@@ -31,20 +32,7 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
   })
 
   if (isPlantLoading) return <LoadingPage />
-
-  if (!plantData)
-    return (
-      <>
-        <PageLayout>
-          <Head>
-            <title>Plant not found</title>
-          </Head>
-          <h1 className="flex grow items-center justify-center">
-            Plant not found
-          </h1>
-        </PageLayout>
-      </>
-    )
+  if (!plantData) return <ErrorPage message="Plant not found" />
 
   return (
     <>

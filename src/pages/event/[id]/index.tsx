@@ -31,7 +31,7 @@ const SingleEventPage: NextPage<{ id: string }> = ({ id: eventId }) => {
             imageUrl={data.plant.imageUrl}
             name={data.plant.name}
             iconSize={16}
-            size={20}
+            size={24}
           />
           <Event event={data} />
         </div>
