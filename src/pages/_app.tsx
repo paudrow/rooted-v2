@@ -5,8 +5,11 @@ import { api } from "@/utils/api"
 import "@/styles/globals.css"
 import { ClerkProvider } from "@clerk/nextjs"
 
+import { Toaster } from "@/components/ui/toaster"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
+
+import "@uploadthing/react/styles.css"
 
 export const metadata: Metadata = {
   // title: {
@@ -30,6 +33,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <ClerkProvider>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Component {...pageProps} />
+        <Toaster />
         <TailwindIndicator />
       </ThemeProvider>
     </ClerkProvider>

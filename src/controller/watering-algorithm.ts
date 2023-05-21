@@ -9,13 +9,31 @@ export const TOO_DRY_DAYS_BETWEEN_SCALER = 2 / 3
 
 export type _WaterEvent = Pick<WaterEvent, "date" | "type">
 
-export function getDateOfNextWateringEvent(events: _WaterEvent[]): Date {
+export function getDateOfNextWaterCheck(
+  events: WaterEvent[],
+  maxWaterEvents?: number
+): Date {
+  const _events = events
+    .map((event) => ({
+      date: event.date,
+      type: event.type,
+    }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+  return _getDateOfNextWaterCheck(_events, maxWaterEvents)
+}
+
+export function _getDateOfNextWaterCheck(
+  events: _WaterEvent[],
+  maxWaterEvents?: number
+): Date {
   if (events.length === 0) {
     return new Date()
   }
   const lastEvent = events[events.length - 1]!
-  const daysFromLastEventToNextWatering =
-    _getDaysFromLastEventToNextWatering(events)
+  const daysFromLastEventToNextWatering = _getDaysFromLastEventToNextCheck(
+    events,
+    maxWaterEvents
+  )
   const dateOfNextWatering = dayjs(lastEvent.date).add(
     daysFromLastEventToNextWatering,
     "day"
@@ -23,14 +41,17 @@ export function getDateOfNextWateringEvent(events: _WaterEvent[]): Date {
   return dateOfNextWatering.toDate()
 }
 
-export function _getDaysFromLastEventToNextWatering(
-  events: _WaterEvent[]
+export function _getDaysFromLastEventToNextCheck(
+  events: _WaterEvent[],
+  maxWaterEvents?: number
 ): number {
   if (events.length === 0) {
     return 0
   }
 
-  const wateringEvents = events.filter((event) => _isWateringEvent(event.type))
+  const wateringEvents = events
+    .filter((event) => _isWateringEvent(event.type))
+    .slice(maxWaterEvents && -maxWaterEvents)
   if (wateringEvents.length < 2) {
     return 1
   }
@@ -123,7 +144,7 @@ export function _getDaysBetweenDates(...dates: Date[]): number[] {
 }
 
 if (require.main === module) {
-  const out = _getDaysFromLastEventToNextWatering([
+  const out = _getDaysFromLastEventToNextCheck([
     {
       date: new Date("2021-01-01"),
       type: WaterEventType.WATERED,
@@ -137,8 +158,8 @@ if (require.main === module) {
       type: WaterEventType.WATERED,
     },
     {
-      date: new Date("2021-01-10"),
-      type: WaterEventType.SKIPPED_TOO_WET,
+      date: new Date("2021-01-12"),
+      type: WaterEventType.WATERED,
     },
   ])
   console.log(out)

@@ -4,13 +4,13 @@ import dayjs from "dayjs"
 import {
   TOO_DRY_DAYS_BETWEEN_SCALER,
   TOO_WET_DAYS_TO_ADD_SCALER,
-  _getDaysFromLastEventToNextWatering,
-  getDateOfNextWateringEvent,
+  _getDateOfNextWaterCheck,
+  _getDaysFromLastEventToNextCheck,
 } from "./watering-algorithm"
 
-describe("getDateOfNextWateringEvent", () => {
+describe("getDateOfNextWaterCheck", () => {
   it("returns today with no events", () => {
-    expect(getDateOfNextWateringEvent([]).toDateString()).toEqual(
+    expect(_getDateOfNextWaterCheck([]).toDateString()).toEqual(
       new Date().toDateString()
     )
   })
@@ -18,7 +18,7 @@ describe("getDateOfNextWateringEvent", () => {
   it("returns today with one event", () => {
     const dayjsDate = dayjs(new Date())
     expect(
-      getDateOfNextWateringEvent([
+      _getDateOfNextWaterCheck([
         {
           date: dayjsDate.toDate(),
           type: WaterEventType.WATERED,
@@ -31,7 +31,7 @@ describe("getDateOfNextWateringEvent", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        getDateOfNextWateringEvent([
+        _getDateOfNextWaterCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -49,7 +49,7 @@ describe("getDateOfNextWateringEvent", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        getDateOfNextWateringEvent([
+        _getDateOfNextWaterCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -71,7 +71,7 @@ describe("getDateOfNextWateringEvent", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        getDateOfNextWateringEvent([
+        _getDateOfNextWaterCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -92,7 +92,7 @@ describe("getDateOfNextWateringEvent", () => {
 
 describe("_getDaysFromLastEventToNextWatering", () => {
   it("returns 0 with no events", () => {
-    expect(_getDaysFromLastEventToNextWatering([])).toEqual(0)
+    expect(_getDaysFromLastEventToNextCheck([])).toEqual(0)
   })
 
   it("returns 1 with no watering events", () => {
@@ -101,7 +101,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
       WaterEventType.SKIPPED_TOO_WET,
     ]) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: new Date(),
             type,
@@ -113,7 +113,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
   it("returns 1 with one watering event", () => {
     expect(
-      _getDaysFromLastEventToNextWatering([
+      _getDaysFromLastEventToNextCheck([
         {
           date: new Date(),
           type: WaterEventType.WATERED,
@@ -126,7 +126,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -144,7 +144,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -166,7 +166,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 2; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(), // day 0
             type: WaterEventType.WATERED,
@@ -192,7 +192,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 2; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -230,7 +230,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -257,7 +257,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     for (let i = 1; i < 10; i = i + 2) {
       // 1 too dry event, which isn't selected as the median
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -279,7 +279,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
       // 2 too dry events, which are selected as the median
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -301,7 +301,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
 
       // 2 intermediate too dry events + an end too dry event resulting in the dry constant being applied twice
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -327,7 +327,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
@@ -353,7 +353,7 @@ describe("_getDaysFromLastEventToNextWatering", () => {
     const dayjsDate = dayjs(new Date())
     for (let i = 1; i < 10; i = i + 2) {
       expect(
-        _getDaysFromLastEventToNextWatering([
+        _getDaysFromLastEventToNextCheck([
           {
             date: dayjsDate.toDate(),
             type: WaterEventType.WATERED,
