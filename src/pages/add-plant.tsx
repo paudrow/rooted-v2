@@ -6,6 +6,7 @@ import { api } from "@/utils/api"
 import { useToast } from "@/components/ui/use-toast"
 import { PageLayout } from "@/components/layout"
 import { PlantNameInput } from "@/components/plant-name-input"
+import SignedInNavBar from "@/components/signed-in-navbar"
 import { UploadPlantImageUrl } from "@/components/upload-plant-image-url"
 
 const Home: NextPage = () => {
@@ -32,21 +33,20 @@ const Home: NextPage = () => {
   })
 
   return (
-    <>
+    <PageLayout>
       <Head>
         <title>Add a Plant</title>
       </Head>
-      <PageLayout>
-        <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
-        <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
-        <button
-          onClick={() => mutate({ name: plantName, imageUrl })}
-          disabled={isAdding}
-        >
-          Add Plant
-        </button>
-      </PageLayout>
-    </>
+      <SignedInNavBar />
+      <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
+      <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
+      <button
+        onClick={() => mutate({ name: plantName, imageUrl })}
+        disabled={isAdding}
+      >
+        Add Plant
+      </button>
+    </PageLayout>
   )
 }
 

@@ -29,13 +29,20 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
         </Head>
         <SignedInNavBar />
         <div className="flex grow flex-col items-center px-4">
-          <PlantImage
-            imageUrl={plantData.imageUrl}
-            altText={plantData.name}
-            iconSize={16}
-            size={24}
-          />
-          <h1>{plantData.name}</h1>
+          <div className="flex flex-col items-center gap-2">
+            <PlantImage
+              imageUrl={plantData.imageUrl}
+              altText={plantData.name}
+              iconSize={16}
+              size={24}
+            />
+            <div className="flex flex-row items-center gap-1">
+              <h1>{plantData.name}</h1>{" "}
+              <Link href={`/plant/${plantData.id}/edit`}>
+                <div className="text-xs font-thin">Edit</div>
+              </Link>
+            </div>
+          </div>
           <EventList plantId={plantData.id} />
         </div>
       </PageLayout>

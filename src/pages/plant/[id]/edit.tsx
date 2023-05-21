@@ -1,57 +1,76 @@
-import type { GetStaticProps, NextPage } from "next"
+import { useEffect, useState } from "react"
+import { type GetStaticProps, type NextPage } from "next"
 import Head from "next/head"
-import Link from "next/link"
 import { api } from "@/utils/api"
-import { type WaterEvent } from "@prisma/client"
-import { Plus, Sprout } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
-import { PlantImage } from "@/components/plant-image"
+import { PlantNameInput } from "@/components/plant-name-input"
 import SignedInNavBar from "@/components/signed-in-navbar"
+import { UploadPlantImageUrl } from "@/components/upload-plant-image-url"
 
-const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
+const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
+  const [plantName, setPlantName] = useState("")
+  const [imageUrl, setImageUrl] = useState<string | undefined>()
+
+  const ctx = api.useContext()
+  const { toast } = useToast()
+
   const { data: plantData, isLoading: isPlantLoading } =
     api.plant.getById.useQuery({
       id,
     })
 
-  const ctx = api.useContext()
-
-  const { mutate, isLoading: isModifying } = api.plant.update.useMutation({
-    onSuccess: () => {
-      void ctx.plant.getById.invalidate({ id })
-    },
-    onError: (error) => {
-      alert(error)
-    },
-  })
-
   if (isPlantLoading) return <LoadingPage />
   if (!plantData) return <ErrorPage message="Plant not found" />
 
+  useEffect(() => {
+    setPlantName(plantData.name)
+    setImageUrl(plantData.imageUrl || undefined)
+  }, [plantData])
+
+  const { mutate, isLoading: isAdding } = api.plant.update.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Plant updated",
+      })
+      void ctx.plant.getById.invalidate({ id })
+    },
+    onError: (err) => {
+      toast({
+        title: "Error",
+        description: err.message,
+        variant: "destructive",
+      })
+    },
+  })
+
   return (
     <>
+      <Head>
+        <title>Edit {plantData.name}</title>
+      </Head>
       <PageLayout>
-        <Head>
-          <title>{plantData.name}</title>
-        </Head>
         <SignedInNavBar />
-        <div className="flex grow flex-col items-center px-4">
-          <PlantImage
-            imageUrl={plantData.imageUrl}
-            altText={plantData.name}
-            iconSize={16}
-            size={24}
-          />
-          <h1>{plantData.name}</h1>
-        </div>
+        <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
+        <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
+        <button
+          onClick={() =>
+            mutate({ id: plantData.id, name: plantName, imageUrl })
+          }
+          disabled={isAdding}
+        >
+          Update Plant
+        </button>
       </PageLayout>
     </>
   )
 }
+
+export default EditPlantPage
 
 export const getStaticProps: GetStaticProps = (context) => {
   const id = context.params?.id
@@ -68,5 +87,3 @@ export const getStaticProps: GetStaticProps = (context) => {
 export const getStaticPaths = () => {
   return { paths: [], fallback: "blocking" }
 }
-
-export default SinglePlantPage
