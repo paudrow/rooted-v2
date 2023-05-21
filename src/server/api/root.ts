@@ -1,6 +1,8 @@
 import { plantRouter } from "@/server/api/routers/plant"
 import { createTRPCRouter } from "@/server/api/trpc"
 
+import { eventRouter } from "./routers/event"
+
 /**
  * This is the primary router for your server.
  *
@@ -8,6 +10,7 @@ import { createTRPCRouter } from "@/server/api/trpc"
  */
 export const appRouter = createTRPCRouter({
   plant: plantRouter,
+  event: eventRouter,
 })
 
 // export type definition of API
