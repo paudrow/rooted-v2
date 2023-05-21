@@ -21,7 +21,7 @@ export const plantRouter = createTRPCRouter({
         },
       })
     }),
-  update: privateProcedure
+  updateById: privateProcedure
     .input(
       z.object({
         id: z.string(),
@@ -84,6 +84,9 @@ export const plantRouter = createTRPCRouter({
       return ctx.prisma.plant.delete({
         where: {
           id: input.id,
+        },
+        include: {
+          WaterEvent: true,
         },
       })
     }),

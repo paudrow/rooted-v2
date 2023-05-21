@@ -26,12 +26,12 @@ export const eventRouter = createTRPCRouter({
         },
       })
     }),
-  update: privateProcedure
+  updateById: privateProcedure
     .input(
       z.object({
         id: z.string(),
         plantId: z.string(),
-        date: z.string(),
+        date: z.date(),
         type: z.nativeEnum(WaterEventType),
         note: z.string().optional(),
       })
@@ -69,6 +69,9 @@ export const eventRouter = createTRPCRouter({
           },
         },
       },
+      orderBy: {
+        date: "desc",
+      },
     })
   }),
   getAllForPlant: privateProcedure
@@ -91,6 +94,17 @@ export const eventRouter = createTRPCRouter({
               userId: ctx.userId,
             },
           ],
+        },
+        include: {
+          plant: {
+            select: {
+              name: true,
+              imageUrl: true,
+            },
+          },
+        },
+        orderBy: {
+          date: "desc",
         },
       })
     }),
@@ -115,6 +129,22 @@ export const eventRouter = createTRPCRouter({
               imageUrl: true,
             },
           },
+        },
+      })
+    }),
+  deleteById: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      if (!ctx.userId) {
+        throw new Error("User is not authenticated")
+      }
+      return ctx.prisma.waterEvent.delete({
+        where: {
+          id: input.id,
         },
       })
     }),

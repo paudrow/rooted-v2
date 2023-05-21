@@ -12,9 +12,10 @@ import {
 
 export default function SelectWateringEvent(props: {
   onValueChange: (value: string) => void
+  startingValue?: string
 }) {
   return (
-    <Select onValueChange={props.onValueChange}>
+    <Select onValueChange={props.onValueChange} value={props.startingValue}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select an event type" />
       </SelectTrigger>

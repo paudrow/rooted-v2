@@ -15,6 +15,7 @@ export default function PickDatePopover(props: {
   setDate: (date: Date) => void
   date: Date | undefined
   isTodayOrEarlier?: boolean
+  startingDate?: Date
 }) {
   return (
     <Popover>

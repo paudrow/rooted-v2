@@ -3,7 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { api } from "@/utils/api"
 import { type WaterEvent } from "@prisma/client"
-import { Plus, Sprout } from "lucide-react"
+import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import ErrorPage from "@/components/error-page"

@@ -3,7 +3,6 @@ import Head from "next/head"
 import Link from "next/link"
 import { api } from "@/utils/api"
 import { type WaterEvent } from "@prisma/client"
-import { Sprout } from "lucide-react"
 
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
@@ -33,6 +32,9 @@ const SingleEventPage: NextPage<{ id: string }> = ({ id: eventId }) => {
             size="medium"
           />
           <Event event={data} />
+          <Link href={`/event/${eventId}/edit`}>
+            <div className="text-xs font-thin">Edit</div>
+          </Link>
         </div>
       </PageLayout>
     </>

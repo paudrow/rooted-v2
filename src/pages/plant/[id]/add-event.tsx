@@ -5,6 +5,7 @@ import { api } from "@/utils/api"
 import { type WaterEventType } from "@prisma/client"
 
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
@@ -16,6 +17,8 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
   const [eventType, setEventType] = useState<WaterEventType | null>(null)
   const [eventDate, setEventDate] = useState<Date>(new Date())
 
+  const { toast } = useToast()
+
   const { data: plantData, isLoading: isPlantLoading } =
     api.plant.getById.useQuery({
       id: plantId,
@@ -23,11 +26,17 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
 
   const { mutate, isLoading: isAdding } = api.event.create.useMutation({
     onSuccess: (data) => {
-      console.log(data)
-      alert("Event added!")
+      toast({
+        title: "Success",
+        description: `Event added to ${plantData?.name ?? "plant"}`,
+      })
     },
     onError: (error) => {
-      console.error(error)
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      })
     },
   })
 
@@ -41,7 +50,7 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
           <title>Add event for {plantData.name}</title>
         </Head>
         <SignedInNavBar />
-        <div className="px-4">
+        <div className="flex flex-col gap-4 px-4">
           <h1 className="text-2xl">
             Add event for {'"'}
             {plantData.name}
@@ -54,23 +63,24 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
           />
           <SelectWateringEvent
             onValueChange={(value) => {
-              console.log(value)
               setEventType(value as WaterEventType)
             }}
           />
-          <Button
-            variant={"default"}
-            disabled={isAdding || !eventType}
-            onClick={() => {
-              mutate({
-                plantId: plantId,
-                type: eventType!,
-                date: new Date().toISOString(),
-              })
-            }}
-          >
-            Add event
-          </Button>
+          <div className="flex justify-start">
+            <Button
+              variant={"default"}
+              disabled={isAdding || !eventType}
+              onClick={() => {
+                mutate({
+                  plantId: plantId,
+                  type: eventType!,
+                  date: new Date().toISOString(),
+                })
+              }}
+            >
+              Add event
+            </Button>
+          </div>
         </div>
       </PageLayout>
     </>

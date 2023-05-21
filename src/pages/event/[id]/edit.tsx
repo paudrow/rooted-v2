@@ -3,6 +3,8 @@ import { type GetStaticProps, type NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { api } from "@/utils/api"
+import { type WaterEventType } from "@prisma/client"
+import { set } from "date-fns"
 
 import {
   AlertDialog,
@@ -20,33 +22,37 @@ import { useToast } from "@/components/ui/use-toast"
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
+import PickDatePopover from "@/components/pick-date-popover"
 import { PlantNameInput } from "@/components/plant-name-input"
+import SelectWateringEvent from "@/components/select-watering-event"
 import SignedInNavBar from "@/components/signed-in-navbar"
 import { UploadPlantImageUrl } from "@/components/upload-plant-image-url"
 
-const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
-  const [plantName, setPlantName] = useState("")
-  const [imageUrl, setImageUrl] = useState<string | undefined>()
+const EditEventPage: NextPage<{ id: string }> = ({ id }) => {
+  const [eventType, setEventType] = useState<WaterEventType | null>(null)
+  const [eventDate, setEventDate] = useState<Date>(new Date())
 
-  const [lastPlantName, setLastPlantName] = useState("")
-  const [lastImageUrl, setLastImageUrl] = useState<string | undefined>()
+  const [lastEventType, setLastEventType] = useState<WaterEventType | null>(
+    null
+  )
+  const [lastEventDate, setLastEventDate] = useState<Date>(new Date())
 
   const ctx = api.useContext()
   const { toast } = useToast()
 
-  const { data: plantData, isLoading: isPlantLoading } =
-    api.plant.getById.useQuery({
+  const { data: eventData, isLoading: isEventLoading } =
+    api.event.getById.useQuery({
       id,
     })
 
   const { mutate: updateMutation, isLoading: isUpdating } =
-    api.plant.updateById.useMutation({
+    api.event.updateById.useMutation({
       onSuccess: () => {
         toast({
           title: "Success",
-          description: "Plant updated",
+          description: "Event updated",
         })
-        void ctx.plant.getById.invalidate({ id })
+        void ctx.event.getById.invalidate({ id })
       },
       onError: (err) => {
         toast({
@@ -59,13 +65,13 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
 
   const router = useRouter()
   const { mutate: deleteMutation, isLoading: isDeleting } =
-    api.plant.deleteById.useMutation({
+    api.event.deleteById.useMutation({
       onSuccess: async () => {
         toast({
           title: "Success",
-          description: "Plant deleted",
+          description: "Event deleted",
         })
-        await router.push("/")
+        await router.push("/events")
       },
       onError: (err) => {
         toast({
@@ -77,48 +83,63 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
     })
 
   useEffect(() => {
-    if (!plantData) return
-    setPlantName(plantData.name)
-    setImageUrl(plantData.imageUrl || undefined)
+    if (!eventData) return
+    setEventType(eventData.type)
+    setEventDate(eventData.date)
 
-    setLastPlantName(plantData.name)
-    setLastImageUrl(plantData.imageUrl || undefined)
-  }, [plantData])
+    setLastEventType(eventData.type)
+    setLastEventDate(eventData.date)
+  }, [eventData])
 
-  if (isPlantLoading) return <LoadingPage />
-  if (!plantData) return <ErrorPage message="Plant not found" />
+  if (isEventLoading) return <LoadingPage />
+  if (!eventData) return <ErrorPage message="Event not found" />
 
   const hasChanges = () => {
-    return plantName !== lastPlantName || imageUrl !== lastImageUrl
+    return (
+      eventType !== lastEventType ||
+      eventDate.getTime() !== lastEventDate.getTime()
+    )
   }
 
   return (
     <>
       <Head>
-        <title>Edit {plantData.name}</title>
+        <title>Edit event</title>
       </Head>
       <PageLayout>
         <SignedInNavBar />
         <div className="flex flex-col gap-4 px-4">
-          <h1 className="text-2xl">Update {plantData.name}</h1>
+          <h1 className="text-2xl">Edit Event</h1>
 
-          <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
-          <div>
-            <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
-          </div>
+          <PickDatePopover
+            date={eventDate}
+            setDate={setEventDate}
+            isTodayOrEarlier={true}
+          />
+          <SelectWateringEvent
+            onValueChange={(value) => {
+              setEventType(value as WaterEventType)
+            }}
+            startingValue={eventType!}
+          />
           <div className="flex justify-start">
             <Button
               onClick={() =>
-                updateMutation({ id: plantData.id, name: plantName, imageUrl })
+                updateMutation({
+                  id: eventData.id,
+                  date: eventDate,
+                  type: eventType!,
+                  plantId: eventData.plantId,
+                })
               }
               disabled={isUpdating || !hasChanges()}
             >
-              Update plant
+              Update event
             </Button>
           </div>
           <div>
             <DeleteButton
-              onClick={() => deleteMutation({ id: plantData.id })}
+              onClick={() => deleteMutation({ id: eventData.id })}
               isDeleting={isDeleting}
             />
           </div>
@@ -129,7 +150,7 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
   )
 }
 
-export default EditPlantPage
+export default EditEventPage
 
 export const getStaticProps: GetStaticProps = (context) => {
   const id = context.params?.id
@@ -151,7 +172,7 @@ function DeleteButton(props: { onClick: () => void; isDeleting: boolean }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button variant="destructive">Delete plant</Button>
+        <Button variant="destructive">Delete event</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -166,7 +187,7 @@ function DeleteButton(props: { onClick: () => void; isDeleting: boolean }) {
             onClick={props.onClick}
             disabled={props.isDeleting}
           >
-            Delete plant
+            Delete event
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
