@@ -42,12 +42,12 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
   const router = useRouter()
   const { mutate: updateMutation, isLoading: isUpdating } =
     api.plant.updateById.useMutation({
-      onSuccess: () => {
+      onSuccess: async () => {
         toast({
           title: "Success",
           description: "Plant updated",
         })
-        router.push(`/plant/${id}`)
+        await router.push(`/plant/${id}`)
       },
       onError: (err) => {
         toast({
