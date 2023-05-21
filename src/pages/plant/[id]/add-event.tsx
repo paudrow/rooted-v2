@@ -1,6 +1,7 @@
 import { use, useState } from "react"
 import type { GetStaticProps, NextPage } from "next"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { api } from "@/utils/api"
 import { type WaterEventType } from "@prisma/client"
 
@@ -12,7 +13,6 @@ import { LoadingPage } from "@/components/loading-page"
 import PickDatePopover from "@/components/pick-date-popover"
 import SelectWateringEvent from "@/components/select-watering-event"
 import SignedInNavBar from "@/components/signed-in-navbar"
-import { useRouter } from "next/router"
 
 const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
   const [eventType, setEventType] = useState<WaterEventType | null>(null)

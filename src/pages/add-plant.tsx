@@ -1,15 +1,15 @@
 import { useState } from "react"
 import { type NextPage } from "next"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { api } from "@/utils/api"
 
+import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { PageLayout } from "@/components/layout"
 import { PlantNameInput } from "@/components/plant-name-input"
 import SignedInNavBar from "@/components/signed-in-navbar"
 import { UploadPlantImageUrl } from "@/components/upload-plant-image-url"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/router"
 
 const Home: NextPage = () => {
   const [plantName, setPlantName] = useState("")
@@ -42,9 +42,7 @@ const Home: NextPage = () => {
       </Head>
       <SignedInNavBar />
       <div className="flex flex-col gap-4 px-4">
-        <h1 className="text-2xl">
-          Add a plant
-        </h1>
+        <h1 className="text-2xl">Add a plant</h1>
         <UploadPlantImageUrl imageUrl={imageUrl} setImageUrl={setImageUrl} />
         <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
         <Button

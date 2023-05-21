@@ -33,13 +33,16 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
             <PlantImage
               imageUrl={plantData.imageUrl}
               altText={plantData.name}
-              size="medium"
+              size="large"
             />
             <div className="flex flex-row items-center gap-1">
               <h1>{plantData.name}</h1>{" "}
               <Link href={`/plant/${plantData.id}/edit`}>
                 <div className="text-xs font-thin">Edit</div>
               </Link>
+            </div>
+            <div>
+              {plantData.nextCheckDate.toLocaleDateString()} is the next check
             </div>
           </div>
           <EventList plantId={plantData.id} />

@@ -9,13 +9,23 @@ export const TOO_DRY_DAYS_BETWEEN_SCALER = 2 / 3
 
 export type _WaterEvent = Pick<WaterEvent, "date" | "type">
 
-export function getDateOfNextWateringEvent(events: _WaterEvent[]): Date {
+export function getDateOfNextWaterCheck(events: WaterEvent[]): Date {
+  const _events = events
+    .map((event) => ({
+      date: event.date,
+      type: event.type,
+    }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+  return _getDateOfNextWaterCheck(_events)
+}
+
+export function _getDateOfNextWaterCheck(events: _WaterEvent[]): Date {
   if (events.length === 0) {
     return new Date()
   }
   const lastEvent = events[events.length - 1]!
   const daysFromLastEventToNextWatering =
-    _getDaysFromLastEventToNextWatering(events)
+    _getDaysFromLastEventToNextCheck(events)
   const dateOfNextWatering = dayjs(lastEvent.date).add(
     daysFromLastEventToNextWatering,
     "day"
@@ -23,7 +33,7 @@ export function getDateOfNextWateringEvent(events: _WaterEvent[]): Date {
   return dateOfNextWatering.toDate()
 }
 
-export function _getDaysFromLastEventToNextWatering(
+export function _getDaysFromLastEventToNextCheck(
   events: _WaterEvent[]
 ): number {
   if (events.length === 0) {
@@ -123,7 +133,7 @@ export function _getDaysBetweenDates(...dates: Date[]): number[] {
 }
 
 if (require.main === module) {
-  const out = _getDaysFromLastEventToNextWatering([
+  const out = _getDaysFromLastEventToNextCheck([
     {
       date: new Date("2021-01-01"),
       type: WaterEventType.WATERED,

@@ -1,4 +1,6 @@
+import { getDateOfNextWaterCheck } from "@/controller/watering-algorithm"
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc"
+import { type WaterEvent } from "@prisma/client"
 import { z } from "zod"
 
 export const plantRouter = createTRPCRouter({
@@ -60,16 +62,69 @@ export const plantRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .query(({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       if (!ctx.userId) {
         throw new Error("User is not authenticated")
       }
-      return ctx.prisma.plant.findFirst({
+      const plant = await ctx.prisma.plant.findFirst({
         where: {
           id: input.id,
           userId: ctx.userId,
         },
       })
+      if (!plant) {
+        throw new Error("Plant not found")
+      }
+      const onlyWaterEvents = await ctx.prisma.waterEvent.findMany({
+        where: {
+          AND: [
+            {
+              plantId: input.id,
+            },
+            {
+              OR: [
+                {
+                  type: "WATERED",
+                },
+                {
+                  type: "WATERED_TOO_DRY",
+                },
+              ],
+            },
+          ],
+        },
+        orderBy: {
+          date: "desc",
+        },
+        take: 5,
+      })
+
+      const lastEvent = await ctx.prisma.waterEvent.findFirst({
+        where: {
+          plantId: input.id,
+        },
+        orderBy: {
+          date: "desc",
+        },
+      })
+
+      let events: WaterEvent[] = []
+      if (!lastEvent) {
+        events = onlyWaterEvents
+      } else {
+        events = [
+          ...(onlyWaterEvents[0]?.id === lastEvent?.id ? [] : [lastEvent]),
+          ...onlyWaterEvents,
+        ]
+      }
+
+      console.log(events.map((e) => e.date))
+
+      return {
+        ...plant,
+        lastWaterDate: events[0]?.date,
+        nextCheckDate: getDateOfNextWaterCheck(events),
+      }
     }),
   deleteById: privateProcedure
     .input(

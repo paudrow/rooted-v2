@@ -27,7 +27,11 @@ export default function PickDatePopover(props: {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {props.startingDate ? format(props.startingDate, "PPP") : <span>Pick a date</span>}
+          {props.startingDate ? (
+            format(props.startingDate, "PPP")
+          ) : (
+            <span>Pick a date</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
