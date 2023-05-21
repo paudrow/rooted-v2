@@ -163,11 +163,10 @@ function DeleteButton(props: { onClick: () => void; isDeleting: boolean }) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            hidden={false}
             onClick={props.onClick}
             disabled={props.isDeleting}
           >
-            Delete Account
+            Delete plant
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
