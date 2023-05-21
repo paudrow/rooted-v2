@@ -67,7 +67,7 @@ function Event(props: {
     <div className="flex flex-row items-center justify-start gap-4 rounded-lg border p-4">
       <PlantImage
         imageUrl={props.plantImageUrl}
-        name={props.plantName}
+        altText={props.plantName}
         iconSize={6}
         size={10}
       />

@@ -6,7 +6,7 @@ export function PlantImage(props: {
   imageUrl: string | null | undefined
   iconSize: number
   size: number
-  name: string
+  altText: string
 }) {
   return (
     <div
@@ -24,7 +24,7 @@ export function PlantImage(props: {
         <img
           className="h-full w-full object-cover"
           src={props.imageUrl}
-          alt={`The "${props.name}" plant`}
+          alt={props.altText}
         />
       )}
     </div>

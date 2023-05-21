@@ -3,48 +3,53 @@ import Head from "next/head"
 import Link from "next/link"
 import { api } from "@/utils/api"
 import { type WaterEvent } from "@prisma/client"
-import { Sprout } from "lucide-react"
+import { Plus, Sprout } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
 import { PlantImage } from "@/components/plant-image"
 import SignedInNavBar from "@/components/signed-in-navbar"
 
-const SingleEventPage: NextPage<{ id: string }> = ({ id: eventId }) => {
-  const { data, isLoading } = api.event.getById.useQuery({
-    id: eventId,
+const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
+  const { data: plantData, isLoading: isPlantLoading } =
+    api.plant.getById.useQuery({
+      id,
+    })
+
+  const ctx = api.useContext()
+
+  const { mutate, isLoading: isModifying } = api.plant.update.useMutation({
+    onSuccess: () => {
+      void ctx.plant.getById.invalidate({ id })
+    },
+    onError: (error) => {
+      alert(error)
+    },
   })
 
-  if (isLoading) return <LoadingPage />
-  if (!data) return <ErrorPage message="Event not found" />
+  if (isPlantLoading) return <LoadingPage />
+  if (!plantData) return <ErrorPage message="Plant not found" />
 
   return (
     <>
       <PageLayout>
         <Head>
-          <title>{data.type}</title>
+          <title>{plantData.name}</title>
         </Head>
         <SignedInNavBar />
-        <div className="flex grow flex-col items-center">
+        <div className="flex grow flex-col items-center px-4">
           <PlantImage
-            imageUrl={data.plant.imageUrl}
-            altText={data.plant.name}
+            imageUrl={plantData.imageUrl}
+            altText={plantData.name}
             iconSize={16}
             size={24}
           />
-          <Event event={data} />
+          <h1>{plantData.name}</h1>
         </div>
       </PageLayout>
     </>
-  )
-}
-
-const Event = (props: { event: WaterEvent }) => {
-  return (
-    <div>
-      {props.event.type} on {props.event.date.toLocaleDateString()}
-    </div>
   )
 }
 
@@ -64,4 +69,4 @@ export const getStaticPaths = () => {
   return { paths: [], fallback: "blocking" }
 }
 
-export default SingleEventPage
+export default SinglePlantPage

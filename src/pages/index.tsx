@@ -104,7 +104,7 @@ const Plant = ({ plant }: { plant: Plant }) => {
     <div className="flex flex-row items-center gap-4 rounded-lg border p-4">
       <PlantImage
         imageUrl={plant.imageUrl}
-        name={plant.name}
+        altText={plant.name}
         iconSize={8}
         size={10}
       />

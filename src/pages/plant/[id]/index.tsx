@@ -31,7 +31,7 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
         <div className="flex grow flex-col items-center px-4">
           <PlantImage
             imageUrl={plantData.imageUrl}
-            name={plantData.name}
+            altText={plantData.name}
             iconSize={16}
             size={24}
           />
