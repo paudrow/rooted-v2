@@ -13,8 +13,7 @@ export function UploadPlantImageUrl(props: {
     <div className="flex flex-row items-center gap-4 p-4">
       <PlantImage
         imageUrl={props.imageUrl}
-        size={24}
-        iconSize={16}
+        size="large"
         altText="The plant's image."
       />
       <UploadButton<OurFileRouter>

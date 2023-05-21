@@ -68,8 +68,7 @@ function Event(props: {
       <PlantImage
         imageUrl={props.plantImageUrl}
         altText={props.plantName}
-        iconSize={6}
-        size={10}
+        size="small"
       />
       <p>
         {props.event.type} on {props.event.date.toLocaleDateString()}

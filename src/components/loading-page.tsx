@@ -10,19 +10,19 @@ export function LoadingPage() {
   )
 }
 
-export function GrowingLoadingSpinner(props: { spinnerSize?: number }) {
+export function GrowingLoadingSpinner() {
   return (
     <div className="flex grow items-center justify-center">
-      <LoadingSpinner size={props.spinnerSize || 24} />
+      <LoadingSpinner />
     </div>
   )
 }
 
-export function LoadingSpinner(props: { size: number }) {
+export function LoadingSpinner() {
   return (
     <div
       className={cn(
-        `h-${props.size} w-${props.size}`,
+        `h-20 w-20`,
         "inline-block animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
       )}
       role="status"

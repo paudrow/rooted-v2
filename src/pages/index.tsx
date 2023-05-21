@@ -102,12 +102,7 @@ const Dashboard = ({ user }: { user: UserResource }) => {
 const Plant = ({ plant }: { plant: Plant }) => {
   return (
     <div className="flex flex-row items-center gap-4 rounded-lg border p-4">
-      <PlantImage
-        imageUrl={plant.imageUrl}
-        altText={plant.name}
-        iconSize={8}
-        size={10}
-      />
+      <PlantImage imageUrl={plant.imageUrl} altText={plant.name} size="small" />
       {plant.name}
     </div>
   )
