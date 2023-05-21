@@ -8,6 +8,7 @@ import { Sprout } from "lucide-react"
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
+import { PlantImage } from "@/components/plant-image"
 import SignedInNavBar from "@/components/signed-in-navbar"
 
 const SingleEventPage: NextPage<{ id: string }> = ({ id: eventId }) => {
@@ -26,16 +27,12 @@ const SingleEventPage: NextPage<{ id: string }> = ({ id: eventId }) => {
         </Head>
         <SignedInNavBar />
         <div className="flex grow flex-col items-center">
-          <div className="h-20 w-20 overflow-hidden rounded-full border border-foreground">
-            {!data.plant.imageUrl && (
-              <div className="flex h-full w-full items-center justify-center bg-secondary">
-                <Sprout className="h-16 w-16" />
-              </div>
-            )}
-            {!!data.plant.imageUrl && (
-              <img src={data.plant.imageUrl} alt={data.plant.name} />
-            )}
-          </div>
+          <PlantImage
+            imageUrl={data.plant.imageUrl}
+            name={data.plant.name}
+            iconSize={16}
+            size={20}
+          />
           <Event event={data} />
         </div>
       </PageLayout>

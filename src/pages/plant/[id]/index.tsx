@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { GrowingLoadingSpinner, LoadingPage } from "@/components/loading-page"
+import { PlantImage } from "@/components/plant-image"
 import SignedInNavBar from "@/components/signed-in-navbar"
 
 const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
@@ -28,16 +29,12 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
         </Head>
         <SignedInNavBar />
         <div className="flex grow flex-col items-center">
-          <div className="h-20 w-20 overflow-hidden rounded-full border border-foreground">
-            {!plantData.imageUrl && (
-              <div className="flex h-full w-full items-center justify-center bg-secondary">
-                <Sprout className="h-16 w-16" />
-              </div>
-            )}
-            {!!plantData.imageUrl && (
-              <img src={plantData.imageUrl} alt={plantData.name} />
-            )}
-          </div>
+          <PlantImage
+            imageUrl={plantData.imageUrl}
+            name={plantData.name}
+            iconSize={16}
+            size={20}
+          />
           <h1>{plantData.name}</h1>
           <EventList plantId={plantData.id} />
         </div>

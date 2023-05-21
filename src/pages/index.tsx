@@ -10,6 +10,7 @@ import { Plus, Sprout } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PageLayout } from "@/components/layout"
 import { GrowingLoadingSpinner, LoadingPage } from "@/components/loading-page"
+import { PlantImage } from "@/components/plant-image"
 import SignedInNavBar from "@/components/signed-in-navbar"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -97,16 +98,12 @@ const Plant = ({ plant }: { plant: Plant }) => {
   return (
     <Link href={`/plant/${plant.id}`}>
       <div className="flex flex-row items-center gap-4 rounded-lg border p-4">
-        <div className="h-10 w-10 overflow-hidden rounded-full border border-foreground">
-          {!plant.imageUrl && (
-            <div className="flex h-full w-full items-center justify-center bg-secondary">
-              <Sprout className="h-6 w-6 grow" />
-            </div>
-          )}
-          {!!plant.imageUrl && (
-            <img src={plant.imageUrl} alt={plant.name} className="grow" />
-          )}
-        </div>
+        <PlantImage
+          imageUrl={plant.imageUrl}
+          name={plant.name}
+          iconSize={6}
+          size={10}
+        />
         {plant.name}
       </div>
     </Link>
