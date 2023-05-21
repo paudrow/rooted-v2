@@ -24,7 +24,7 @@ export default function EventsPage() {
   return (
     <PageLayout>
       <Head>
-        <title>Rooted Events</title>
+        <title>Röoted Events</title>
       </Head>
       <SignedInNavBar />
       <div className="px-4">
@@ -64,7 +64,7 @@ function Event(props: {
   plantImageUrl: string | null
 }) {
   return (
-    <div className="flex flex-row items-center justify-start gap-4 rounded-lg border p-4">
+    <div className="flex flex-row items-center justify-start gap-4 rounded-md border p-4">
       <PlantImage
         imageUrl={props.plantImageUrl}
         altText={props.plantName}

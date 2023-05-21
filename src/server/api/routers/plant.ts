@@ -1,7 +1,17 @@
 import { getDateOfNextWaterCheck } from "@/controller/watering-algorithm"
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc"
-import { type WaterEvent } from "@prisma/client"
+import { type Plant, type WaterEvent } from "@prisma/client"
+import dayjs from "dayjs"
 import { z } from "zod"
+
+function getNextAndLastWaterDates(data: Plant & { WaterEvent: WaterEvent[] }) {
+  return {
+    lastWaterDate: data.WaterEvent.find(
+      (event) => event.type === "WATERED" || event.type === "WATERED_TOO_DRY"
+    )?.date,
+    nextWaterDate: getDateOfNextWaterCheck(data.WaterEvent, 10),
+  }
+}
 
 export const plantRouter = createTRPCRouter({
   create: privateProcedure
@@ -46,15 +56,50 @@ export const plantRouter = createTRPCRouter({
         },
       })
     }),
-  getAll: privateProcedure.query(({ ctx }) => {
+  getAll: privateProcedure.query(async ({ ctx }) => {
     if (!ctx.userId) {
       throw new Error("User is not authenticated")
     }
-    return ctx.prisma.plant.findMany({
+    const plants = await ctx.prisma.plant.findMany({
       where: {
         userId: ctx.userId,
       },
+      include: {
+        WaterEvent: {
+          take: 50,
+          orderBy: {
+            date: "desc",
+          },
+        },
+      },
     })
+    const plantsWithWaterDates = plants
+      .map((plant) => {
+        const { lastWaterDate, nextWaterDate } = getNextAndLastWaterDates(plant)
+        return {
+          ...plant,
+          lastWaterDate,
+          nextWaterDate,
+        }
+      })
+      .sort((a, b) => {
+        if (a.nextWaterDate < b.nextWaterDate) {
+          return -1
+        }
+        if (a.nextWaterDate > b.nextWaterDate) {
+          return 1
+        }
+        return 0
+      })
+    const endOfCurrentDay = dayjs().endOf("day").toDate()
+    return {
+      due: plantsWithWaterDates.filter(
+        (plant) => plant.nextWaterDate <= endOfCurrentDay
+      ),
+      notDue: plantsWithWaterDates.filter(
+        (plant) => plant.nextWaterDate > endOfCurrentDay
+      ),
+    }
   }),
   getById: privateProcedure
     .input(
@@ -71,59 +116,43 @@ export const plantRouter = createTRPCRouter({
           id: input.id,
           userId: ctx.userId,
         },
-      })
-      if (!plant) {
-        throw new Error("Plant not found")
-      }
-      const onlyWaterEvents = await ctx.prisma.waterEvent.findMany({
-        where: {
-          AND: [
-            {
-              plantId: input.id,
-            },
-            {
-              OR: [
+        include: {
+          WaterEvent: {
+            where: {
+              AND: [
                 {
-                  type: "WATERED",
+                  plantId: input.id,
                 },
                 {
-                  type: "WATERED_TOO_DRY",
+                  OR: [
+                    {
+                      type: "WATERED",
+                    },
+                    {
+                      type: "WATERED_TOO_DRY",
+                    },
+                  ],
                 },
               ],
             },
-          ],
-        },
-        orderBy: {
-          date: "desc",
-        },
-        take: 5,
-      })
-
-      const lastEvent = await ctx.prisma.waterEvent.findFirst({
-        where: {
-          plantId: input.id,
-        },
-        orderBy: {
-          date: "desc",
+            orderBy: {
+              date: "desc",
+            },
+            take: 50,
+          },
         },
       })
 
-      let events: WaterEvent[] = []
-      if (!lastEvent) {
-        events = onlyWaterEvents
-      } else {
-        events = [
-          ...(onlyWaterEvents[0]?.id === lastEvent?.id ? [] : [lastEvent]),
-          ...onlyWaterEvents,
-        ]
+      if (!plant) {
+        throw new Error("Plant not found")
       }
 
-      console.log(events.map((e) => e.date))
+      const { lastWaterDate, nextWaterDate } = getNextAndLastWaterDates(plant)
 
       return {
         ...plant,
-        lastWaterDate: events[0]?.date,
-        nextCheckDate: getDateOfNextWaterCheck(events),
+        lastWaterDate,
+        nextWaterDate,
       }
     }),
   deleteById: privateProcedure

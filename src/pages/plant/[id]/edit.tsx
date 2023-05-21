@@ -31,7 +31,6 @@ const EditPlantPage: NextPage<{ id: string }> = ({ id }) => {
   const [lastPlantName, setLastPlantName] = useState("")
   const [lastImageUrl, setLastImageUrl] = useState<string | undefined>()
 
-  const ctx = api.useContext()
   const { toast } = useToast()
 
   const { data: plantData, isLoading: isPlantLoading } =

@@ -9,7 +9,7 @@ const f = createUploadthing()
 //   const user = currentUser();
 //   return user;
 // }
-const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" }) // Fake auth function
+const auth = (_req: NextApiRequest, _res: NextApiResponse) => ({ id: "fakeId" }) // Fake auth function
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {

@@ -1,4 +1,4 @@
-import { use, useState } from "react"
+import { useState } from "react"
 import type { GetStaticProps, NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -76,7 +76,7 @@ const AddEventToPlantPage: NextPage<{ id: string }> = ({ id: plantId }) => {
               onClick={() => {
                 mutate({
                   plantId: plantId,
-                  type: eventType!,
+                  type: eventType as WaterEventType,
                   date: eventDate,
                 })
               }}

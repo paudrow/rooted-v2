@@ -36,13 +36,19 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
               size="large"
             />
             <div className="flex flex-row items-center gap-1">
-              <h1>{plantData.name}</h1>{" "}
+              <h1 className="text-2xl">{plantData.name}</h1>{" "}
               <Link href={`/plant/${plantData.id}/edit`}>
                 <div className="text-xs font-thin">Edit</div>
               </Link>
             </div>
-            <div>
-              {plantData.nextCheckDate.toLocaleDateString()} is the next check
+            <div className="opacity-70">
+              Next check on {plantData.nextWaterDate.toLocaleDateString()}
+              {plantData.lastWaterDate && (
+                <span>
+                  {" - "}last watered on{" "}
+                  {plantData.lastWaterDate.toLocaleDateString()}
+                </span>
+              )}
             </div>
           </div>
           <EventList plantId={plantData.id} />
@@ -59,7 +65,6 @@ const EventList = (props: { plantId: string }) => {
     })
 
   if (isEventsLoading) return <LoadingPage />
-
   if (!eventData) return <ErrorPage message="Events not found" />
 
   const addEventHref = `/plant/${props.plantId}/add-event`
@@ -75,7 +80,7 @@ const EventList = (props: { plantId: string }) => {
         </Link>
       </div>
       <div className="pb-4" />
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         {eventData.length === 0 && (
           <div className="text-center">
             <p>No events yet</p>
@@ -98,8 +103,13 @@ const EventList = (props: { plantId: string }) => {
 const Event = (props: { event: WaterEvent }) => {
   return (
     <Link href={`/event/${props.event.id}`}>
-      <div>
-        {props.event.type} on {props.event.date.toLocaleDateString()}
+      <div className="flex w-full grow flex-col rounded-md border p-4">
+        <div>
+          {props.event.date.toLocaleDateString()}
+          <span className="opacity-70">
+            {" - "} {props.event.type}
+          </span>
+        </div>
       </div>
     </Link>
   )

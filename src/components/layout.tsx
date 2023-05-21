@@ -5,7 +5,7 @@ export const PageLayout = (props: PropsWithChildren) => {
   return (
     <>
       <Head>
-        <title>Rooted App</title>
+        <title>Röoted App</title>
         <meta name="description" content="Grow with your plants!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

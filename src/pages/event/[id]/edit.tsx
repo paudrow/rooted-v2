@@ -4,7 +4,6 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import { api } from "@/utils/api"
 import { type WaterEventType } from "@prisma/client"
-import { set } from "date-fns"
 
 import {
   AlertDialog,
@@ -23,10 +22,8 @@ import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
 import { LoadingPage } from "@/components/loading-page"
 import PickDatePopover from "@/components/pick-date-popover"
-import { PlantNameInput } from "@/components/plant-name-input"
 import SelectWateringEvent from "@/components/select-watering-event"
 import SignedInNavBar from "@/components/signed-in-navbar"
-import { UploadPlantImageUrl } from "@/components/upload-plant-image-url"
 
 const EditEventPage: NextPage<{ id: string }> = ({ id }) => {
   const [eventType, setEventType] = useState<WaterEventType | null>(null)
@@ -120,7 +117,7 @@ const EditEventPage: NextPage<{ id: string }> = ({ id }) => {
             onValueChange={(value) => {
               setEventType(value as WaterEventType)
             }}
-            startingValue={eventType!}
+            startingValue={eventType as WaterEventType}
           />
           <div className="flex justify-start">
             <Button
@@ -128,7 +125,7 @@ const EditEventPage: NextPage<{ id: string }> = ({ id }) => {
                 updateMutation({
                   id: eventData.id,
                   date: eventDate,
-                  type: eventType!,
+                  type: eventType as WaterEventType,
                   plantId: eventData.plantId,
                 })
               }
