@@ -61,6 +61,14 @@ export const eventRouter = createTRPCRouter({
       where: {
         userId: ctx.userId,
       },
+      include: {
+        plant: {
+          select: {
+            name: true,
+            imageUrl: true,
+          },
+        },
+      },
     })
   }),
   getAllForPlant: privateProcedure
@@ -83,6 +91,30 @@ export const eventRouter = createTRPCRouter({
               userId: ctx.userId,
             },
           ],
+        },
+      })
+    }),
+  getById: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      if (!ctx.userId) {
+        throw new Error("User is not authenticated")
+      }
+      return ctx.prisma.waterEvent.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          plant: {
+            select: {
+              name: true,
+              imageUrl: true,
+            },
+          },
         },
       })
     }),

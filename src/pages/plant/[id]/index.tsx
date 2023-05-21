@@ -6,8 +6,9 @@ import { type WaterEvent } from "@prisma/client"
 import { Plus, Sprout } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import ErrorPage from "@/components/error-page"
 import { PageLayout } from "@/components/layout"
-import LoadingPage from "@/components/loading-page"
+import { GrowingLoadingSpinner, LoadingPage } from "@/components/loading-page"
 import SignedInNavBar from "@/components/signed-in-navbar"
 
 const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
@@ -17,20 +18,7 @@ const SinglePlantPage: NextPage<{ id: string }> = ({ id }) => {
     })
 
   if (isPlantLoading) return <LoadingPage />
-
-  if (!plantData)
-    return (
-      <>
-        <PageLayout>
-          <Head>
-            <title>Plant not found</title>
-          </Head>
-          <h1 className="flex grow items-center justify-center">
-            Plant not found
-          </h1>
-        </PageLayout>
-      </>
-    )
+  if (!plantData) return <ErrorPage message="Plant not found" />
 
   return (
     <>
@@ -66,7 +54,7 @@ const EventList = (props: { plantId: string }) => {
 
   if (isEventsLoading) return <LoadingPage />
 
-  if (!eventData) return <div>Something went wrong</div>
+  if (!eventData) return <ErrorPage message="Events not found" />
 
   const addEventHref = `/plant/${props.plantId}/add-event`
   return (
@@ -103,9 +91,11 @@ const EventList = (props: { plantId: string }) => {
 
 const Event = (props: { event: WaterEvent }) => {
   return (
-    <div>
-      {props.event.type} on {props.event.date.toLocaleDateString()}
-    </div>
+    <Link href={`/event/${props.event.id}`}>
+      <div>
+        {props.event.type} on {props.event.date.toLocaleDateString()}
+      </div>
+    </Link>
   )
 }
 

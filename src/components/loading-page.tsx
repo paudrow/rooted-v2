@@ -1,6 +1,16 @@
 import { cn } from "@/lib/utils"
 
-export const LoadingPage = (props: { spinnerSize?: number }) => {
+import { PageLayout } from "./layout"
+
+export function LoadingPage() {
+  return (
+    <PageLayout>
+      <GrowingLoadingSpinner />
+    </PageLayout>
+  )
+}
+
+export function GrowingLoadingSpinner(props: { spinnerSize?: number }) {
   return (
     <div className="flex grow items-center justify-center">
       <LoadingSpinner size={props.spinnerSize || 20} />
@@ -8,9 +18,7 @@ export const LoadingPage = (props: { spinnerSize?: number }) => {
   )
 }
 
-export default LoadingPage
-
-export const LoadingSpinner = (props: { size: number }) => {
+export function LoadingSpinner(props: { size: number }) {
   return (
     <div
       className={cn(

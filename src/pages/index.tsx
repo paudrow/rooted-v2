@@ -9,28 +9,24 @@ import { Plus, Sprout } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { PageLayout } from "@/components/layout"
-import LoadingPage from "@/components/loading-page"
+import { GrowingLoadingSpinner, LoadingPage } from "@/components/loading-page"
 import SignedInNavBar from "@/components/signed-in-navbar"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const Home: NextPage = () => {
   const { user, isSignedIn, isLoaded } = useUser()
+  if (!isLoaded) return <LoadingPage />
 
   return (
     <PageLayout>
-      {!isLoaded && <LoadingPage />}
-      {!!isLoaded && (
+      {!isSignedIn && <SignUpOrSignIn />}
+      {!!isSignedIn && (
         <>
-          {!isSignedIn && <SignUpOrSignIn />}
-          {!!isSignedIn && (
-            <>
-              <Head>
-                <title>Rooted Dashboard</title>
-              </Head>
-              <SignedInNavBar />
-              <Dashboard user={user} />
-            </>
-          )}
+          <Head>
+            <title>Rooted Dashboard</title>
+          </Head>
+          <SignedInNavBar />
+          <Dashboard user={user} />
         </>
       )}
     </PageLayout>
@@ -75,9 +71,9 @@ const Dashboard = ({ user }: { user: UserResource }) => {
   return (
     <div className="px-4">
       <div className="flex w-full flex-row items-center justify-between">
-        <div className="text-2xl">
+        <h1 className="text-2xl">
           {user.firstName ? `${user.firstName}'s` : "Your"} plants
-        </div>
+        </h1>
         <Link href="/add-plant">
           <Button variant={"secondary"} className="flex flex-row gap-1">
             <Plus size={24} />
@@ -86,7 +82,7 @@ const Dashboard = ({ user }: { user: UserResource }) => {
         </Link>
       </div>
       <div className="py-2" />
-      {!!isPlantsLoading && <LoadingPage spinnerSize={20} />}
+      {!!isPlantsLoading && <GrowingLoadingSpinner />}
       {!isPlantsLoading && (
         <div className="flex flex-col justify-center gap-4">
           {!data && <div>Something went wrong</div>}
