@@ -1,11 +1,11 @@
-/** @type {import('tailwindcss').Config} */
+/* @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
     './src/pages/**/*.{ts,tsx}',
     './src/components/**/*.{ts,tsx}',
     './src/app/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -21,6 +21,8 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        grey: "hsl(var(--fill-grey))",
+        buttonBackground: "hsl(var(--button-background))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -55,6 +57,11 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      height: {
+        '128': '32rem',
+        '154': '40rem',
+        '184': '48rem',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },
@@ -69,7 +76,24 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-    },
+      fontFamily: {
+        'header': ['"Paytone One"'],
+        'subhead': ['"Open Sans"'],
+        'sans': ['Catamaran'],
+      },
+      borderWidth: {
+        DEFAULT: '1px',
+        '0': '0',
+        '2': '2px',
+        '3': '3px',
+        '4': '4px',
+        '6': '6px',
+        '8': '8px',
+      },
+      inset: {
+        '1/5': '20%',
+      }
+    }
   },
   plugins: [require("tailwindcss-animate")],
 }

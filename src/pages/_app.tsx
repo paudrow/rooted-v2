@@ -3,6 +3,7 @@ import { type AppType } from "next/app"
 import { api } from "@/utils/api"
 
 import "@/styles/globals.css"
+import Head from "next/head"
 import { ClerkProvider } from "@clerk/nextjs"
 
 import { Toaster } from "@/components/ui/toaster"
@@ -30,13 +31,23 @@ export const metadata: Metadata = {
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <ClerkProvider>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <Component {...pageProps} />
-        <Toaster />
-        <TailwindIndicator />
-      </ThemeProvider>
-    </ClerkProvider>
+    <>
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Catamaran&family=Open+Sans:ital,wght@1,600&family=Paytone+One&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+      <div className="text-primary">
+        <ClerkProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Component {...pageProps} />
+            <Toaster />
+            <TailwindIndicator />
+          </ThemeProvider>
+        </ClerkProvider>
+      </div>
+    </>
   )
 }
 
